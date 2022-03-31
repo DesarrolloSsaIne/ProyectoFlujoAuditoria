@@ -1,0 +1,223 @@
+{% extends 'base/base.html' %}
+{% block title %}
+Gestionar Auditorías
+{% endblock %}
+{% block content %}
+
+{% if messages %}
+		  {% for message in messages %}
+
+			<div style="border-radius:0;" {% if message.tags %} id="danger-alert" class="{{request.session.message_class}} fade show mb-0" role="alert" {% endif %}>
+			  {{ message }}
+			  <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+				<span aria-hidden="true">&times;</span>
+			  </button>
+			</div>
+
+		  {% endfor %}
+
+	{% endif %}
+
+	<section class="panel">
+							<header class="panel-heading">
+								<div class="panel-actions">
+
+
+
+								 <button  type="button" class="create btn btn-sm btn-success"  data-toggle="tooltip" data-original-title="Tooltip on bottom" data-placement="top"  name="button" title="Agregar Auditoría">
+      								<span class="fa fa-plus"></span></button>
+
+
+									<!--<a href="#" class="fa fa-times"></a>-->
+								</div>
+
+
+								<h2 class="panel-title">  Listado Auditorías Registradas  </h2>
+
+							</header>
+							<div class="panel-body">
+								<table class="table table-bordered table-striped mb-none" id="datatable-default">
+									<thead>
+										<tr>
+                                            <th>#</th>
+											<th>Año</th>
+											<th>Código</th>
+											<th>Nombre Auditoría</th>
+                                            <th>Área</th>
+											<th>Responsable</th>
+                                            <th>Tipo</th>
+<!--                                            <th>Fecha Inicio</th>-->
+<!--                                            <th>Fecha Término</th>-->
+                                            <th>Estado</th>
+											<th> Opciones</th>
+
+
+
+
+                                        </tr>
+									</thead>
+									<tbody>
+
+                                            {% for auditoria in object_list %}
+                                                <tr>
+
+                                                    <td> {{ auditoria.id }}</td>
+													<td> {{ auditoria.anio_auditoria }}</td>
+                                                    <td> {{ auditoria.cod_auditoria }}</td>
+<!--													<td> {{ auditoria.descripcion_auditoria }}</td>-->
+													<td id="ExpandHallazgoDescripcion" > <p class="Mitexto" >{{ auditoria.descripcion_auditoria }}</p></td>
+                                                    <td> {{ auditoria.jefatura_id.id_nivel }}</td>
+													<td> {{ auditoria.jefatura_id.id_user}}</td>
+													<td> {{ auditoria.tipo_auditoria }}</td>
+
+<!--                                                    <td> {{ auditoria.fecha_inicio_auditoria }}</td>-->
+<!--                                                    <td> {% if auditoria.fecha_termino_auditoria == none %} - {% else %}{{auditoria.fecha_termino_auditoria}}{% endif %} </td>-->
+                                                    <td> {{ auditoria.estado_auditoria }}</td>
+
+
+
+
+
+    												 <td style="width:180px;">
+														 <button type="button" title="Actualizar Auditoría" data-toggle="tooltip" data-original-title="Tooltip on bottom" data-placement="top" class="update btn btn-sm btn-primary" data-id="{% url 'AuditoriaEditar' auditoria.id %}" >
+														<span class="fa fa-pencil"></span></button>
+														 <button type="button" title="Eliminar Auditoría" data-toggle="tooltip" data-original-title="Tooltip on bottom" data-placement="top" class="delete btn btn-sm btn-danger" data-id="{% url 'AuditoriaEliminar' auditoria.id %}">
+      													  <span class="fa fa-trash-o"></span></button>
+														  <a type="button" title="Hallazgos Asociados" data-toggle="tooltip" data-original-title="Tooltip on bottom" data-placement="top"  id="notification_auditores" href="{% url 'HallazgosListar' auditoria.id %}"  class="btn btn-sm btn-warning notification_auditores"   >
+														<span class="fa fa-search"></span>
+															  {% if auditoria.count_hallazgos == none %} <span class="badge"   >0</span> {% else %} <span class="badge"   >{{ auditoria.count_hallazgos }}</span> {% endif %}
+														  </a>
+														 <a type="button" title="Auditor(es) Designado(s)" data-toggle="tooltip" data-original-title="Tooltip on bottom" data-placement="top"  id="notification_auditores" href="{% url 'AuditoriaAuditorListar' auditoria.id %}"  class="btn btn-sm btn-info notification_auditores"   >
+														<span class="fa fa-user"></span>
+                                                         {% if auditoria.count_auditores == none %} <span class="badge"   >0</span> {% else %} <span class="badge"   >{{ auditoria.count_auditores }}</span> {% endif %}
+                                                         </a>
+														 <a  type="button" style="width:30px; height:30px; "  class="btn btn-sm btn-success"  name="button" title="Descargar Reporte Xls" data-toggle="tooltip" data-original-title="Tooltip on bottom" data-placement="top" href="{% url 'exporta_reporte_auditoria_auditor_xls' auditoria.id %}">
+														 <span style="margin-left:-1px; " class="fa fa-file-excel-o"></span></a>
+                                                    </td>
+                                                </tr>
+                                            {% endfor %}
+
+
+									</tbody>
+								</table>
+
+							</div>
+						</section>
+
+
+
+
+<!--Cabecera del modal -->
+<div class="modal fade" tabindex="-1" role="dialog" id="modalCreate">
+  <div class="modal-dialog modal-md" role="document">
+	<div class="modal-content">
+
+    </div>
+  </div>
+</div>
+
+	<div class="modal fade" tabindex="-1" role="dialog" id="modalDetalle">
+  <div class="modal-dialog modal-xs" role="document">
+	<div class="modal-content">
+
+    </div>
+  </div>
+
+</div>
+<div class="modal fade" tabindex="-1" role="dialog" id="modalUpdate">
+  <div class="modal-dialog modal-md" role="document">
+	<div class="modal-content">
+
+    </div>
+  </div>
+</div>
+
+
+<div class="modal fade" tabindex="-1" role="dialog" id="modalDelete">
+  <div class="modal-dialog modal-xs" role="document">
+	<div class="modal-content">
+
+    </div>
+  </div>
+</div>
+<!--Fin cabecera del modal -->
+
+
+
+     <div class="modal fade" id="observacion_centerAuditoria" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+          <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+
+				<header class="panel-heading">
+				<div class="panel-actions">
+				<a class="fa fa-times" data-dismiss="modal"></a>
+				</div>
+				<h2 class="panel-title">Nombre Auditoria</h2>
+			</header>
+
+              <div class="modal-body">
+               	<textarea id="txt_obs_campo_expandAuditoria" rows="15" cols="80" class="form-control" style="width:100%;resize: none; " maxlength="5000" readonly  ></textarea>
+
+              </div>
+
+
+
+              <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+
+
+	{% block extrajs %}
+
+
+
+<script type="text/javascript">
+
+
+$(document).ready(function(){
+
+
+$('#datatable-default').on('click', '#ExpandHallazgoDescripcion', function () {
+    $('#txt_obs_campo_expandAuditoria').val($(this).parents('tr').find('td:nth-child(4)').text())
+    $('#observacion_centerAuditoria').modal('toggle');
+});
+
+
+	// JS modal crea Registro
+ 	 $(".create").modalForm(  {formURL: "{% url 'AuditoriaCrear' %}", modalID: $("#modalCreate")});
+
+
+   	 // JS modal actualiza Registro
+   $(".update").each(function () {
+   $(this).modalForm({formURL: $(this).data('id'),  modalID: $("#modalUpdate")});
+
+    });
+
+
+    // JS modal elimina Registro
+    $(".delete").each(function () {
+    $(this).modalForm({formURL: $(this).data('id'),  modalID: $("#modalDelete")});
+	});
+
+
+     // Js Muestra/Oculta Mensaje Success
+   	 $(".alert").fadeTo(2000, 500).slideUp( "slow", function() {
+     $(this).remove();
+  });
+
+});
+
+</script>
+
+
+		{% endblock %}
+
+
+
+{% endblock %}

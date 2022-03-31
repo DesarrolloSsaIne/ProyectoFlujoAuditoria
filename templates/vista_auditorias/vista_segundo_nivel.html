@@ -1,0 +1,63 @@
+{% extends 'base/base.html' %}
+{% load sitetree %}
+
+{% block title %}
+Estructura Segundo Nivel
+{% endblock %}
+{% block content %}
+<section class="panel">
+							<header class="panel-heading">
+								<div class="panel-actions">
+								</div>
+
+								<h2 class="panel-title">Vista Nivel Tactico</h2>
+							</header>
+        {% if ObjectList %}
+
+							<div class="panel-body">
+								<table class="table table-bordered  mb-none" id="datatable-default">
+									<thead>
+										<tr>
+                                            <th>Dependencia</th>
+											<th>Descripción Nivel</th>
+											<th>Nivel inferior</th>
+											<th>Auditorias</th>
+										</tr>
+									</thead>
+									<tbody>
+                                            {% for Ges_SegundoNivel in ObjectList %}
+                                                <tr>
+                                                    <td> {{ Ges_SegundoNivel.primer_nivel }}</td>
+                                                    <td> {{ Ges_SegundoNivel.descripcion_nivel }}</td>
+
+                                                    <td style="width:90px; text-align:center;">
+															<a class="btn btn-primary" href="{% url 'TercerNivelVista' Ges_SegundoNivel.id %}"><i class="fa fa-bars" aria-label="Toggle sidebar"></i></a>
+														</a>
+                                                    </td>
+													 <td style="width:90px; text-align:center;">
+
+														<a class="btn btn-warning" id="notification" href="{% url 'AuditoriaListarVista' Ges_SegundoNivel.id 2 %}"><i class="fa fa-book" aria-label="Toggle sidebar"></i>
+														 {% if Ges_SegundoNivel.count == none and Ges_SegundoNivel.count_auditorias == none %} <span class="badge"   >0</span>
+															{% elif  Ges_SegundoNivel.count != none %} <span class="badge"   >
+																{{ Ges_SegundoNivel.count }}</span>
+															{% elif  Ges_SegundoNivel.count_auditorias != none %} <span class="badge"   >
+																{{ Ges_SegundoNivel.count_auditorias }}</span>
+															{% endif %}
+
+															</a>
+                                                    </td>
+
+                                                </tr>
+                                            {% endfor %}
+
+									</tbody>
+								</table>
+							</div>
+
+     {% else %}
+      <p>No hay registros en la lista</p>
+    {% endif %}
+						</section>
+{% endblock %}
+</body>
+</html>

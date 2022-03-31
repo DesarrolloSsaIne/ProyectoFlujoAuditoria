@@ -1,0 +1,56 @@
+{% extends 'base/base.html' %}
+{% load sitetree %}
+
+{% block title %}
+Estructura Primer Nivel
+{% endblock %}
+
+
+{% block content %}
+<section class="panel">
+							<header class="panel-heading">
+								<div class="panel-actions">
+								</div>
+
+								<h2 class="panel-title">Vista Nivel Estratégico</h2>
+							</header>
+        {% if ObjectList %}
+
+							<div class="panel-body">
+								<table class="table table-bordered  mb-none" id="datatable-default">
+									<thead>
+										<tr>
+											<th>Descripción Nivel</th>
+											<th>Nivel inferior</th>
+											<th>Auditorias</th>
+										</tr>
+									</thead>
+									<tbody>
+                                            {% for Ges_PrimerNivel in ObjectList %}
+                                                <tr>
+
+                                                    <td> {{ Ges_PrimerNivel.descripcion_nivel }}</td>
+
+                                                    <td style="width:90px; text-align:center;">
+
+														<a class="btn btn-primary" href="{% url 'SegundoNivelVista' Ges_PrimerNivel.id %}"><i class="fa fa-bars" aria-label="Toggle sidebar"></i></a>
+                                                    </td>
+													 <td style="width:90px; text-align:center;">
+
+														<a class="btn btn-warning" id="notification" href="{% url 'AuditoriaListarVista' Ges_PrimerNivel.id 1 %}"><i class="fa fa-book" aria-label="Toggle sidebar"></i>
+														{% if Ges_PrimerNivel.count_auditorias == none %} <span class="badge"   >0</span> {% else %} <span class="badge"   >{{ Ges_PrimerNivel.count_auditorias }}</span> {% endif %}
+														</a>
+                                                    </td>
+
+                                                </tr>
+                                            {% endfor %}
+
+									</tbody>
+								</table>
+							</div>
+
+     {% else %}
+      <p>No hay registros en la lista</p>
+    {% endif %}
+						</section>
+{% endblock %}

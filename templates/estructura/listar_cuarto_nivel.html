@@ -1,0 +1,61 @@
+{% extends 'base/base.html' %}
+{% load sitetree %}
+
+{% block title %}
+Estructura Cuarto Nivel
+{% endblock %}
+{% block content %}
+<section class="panel">
+							<header class="panel-heading">
+								<div class="panel-actions">
+												<button type="button" class="volver btn btn-sm btn-info"  name="button" title="Volver" >
+      								<span class="fa fa-reply"></span></button>
+								</div>
+
+
+								<h2 class="panel-title">Gestión Cuarto Nivel</h2>
+							</header>
+        {% if ObjectList %}
+
+							<div class="panel-body">
+								<table class="table table-bordered  mb-none" id="datatable-default">
+									<thead>
+										<tr>
+                                            <th>Dependencia</th>
+											<th>Descripción Nivel</th>
+											<th>Opción</th>
+										</tr>
+									</thead>
+									<tbody>
+                                            {% for Ges_CuartoNivel in ObjectList %}
+                                                <tr>
+                                                    <td> {{ Ges_CuartoNivel.tercer_nivel }}</td>
+                                                    <td> {{ Ges_CuartoNivel.descripcion_nivel }}</td>
+
+                                                    <td style="width:90px; text-align:center;">
+
+                                                    </td>
+
+                                                </tr>
+                                            {% endfor %}
+
+									</tbody>
+								</table>
+							</div>
+
+     {% else %}
+      <p>No hay registros en la lista</p>
+    {% endif %}
+						</section>
+	{% block extrajs %}
+<script type="text/javascript">
+
+
+$( ".volver" ).click(function() {
+  $(location).attr('href', '{% url 'TercerNivel' idTercerNivel  %}')
+});
+
+</script>
+{% endblock %}
+
+{% endblock %}

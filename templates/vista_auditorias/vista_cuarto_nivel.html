@@ -1,0 +1,57 @@
+{% extends 'base/base.html' %}
+{% load sitetree %}
+
+{% block title %}
+Estructura Cuarto Nivel
+{% endblock %}
+{% block content %}
+<section class="panel">
+							<header class="panel-heading">
+								<div class="panel-actions">
+								</div>
+
+								<h2 class="panel-title">Vista Nivel Operativo</h2>
+							</header>
+        {% if ObjectList %}
+
+							<div class="panel-body">
+								<table class="table table-bordered  mb-none" id="datatable-default">
+									<thead>
+										<tr>
+                                            <th>Dependencia</th>
+											<th>Descripción Nivel</th>
+											<th>Auditorias</th>
+										</tr>
+									</thead>
+									<tbody>
+                                            {% for Ges_CuartoNivel in ObjectList %}
+                                                <tr>
+                                                    <td> {{ Ges_CuartoNivel.tercer_nivel }}</td>
+                                                    <td> {{ Ges_CuartoNivel.descripcion_nivel }}</td>
+
+
+													 <td style="width:90px; text-align:center;">
+
+														<a class="btn btn-warning" id="notification" href="{% url 'AuditoriaListarVista' Ges_CuartoNivel.id 4 %}"><i class="fa fa-book" aria-label="Toggle sidebar"></i>
+														{% if Ges_CuartoNivel.count == none and Ges_CuartoNivel.count_auditorias == none %} <span class="badge"   >0</span>
+															{% elif  Ges_CuartoNivel.count != none %} <span class="badge"   >
+																{{ Ges_CuartoNivel.count }}</span>
+															{% elif  Ges_CuartoNivel.count_auditorias != none %} <span class="badge"   >
+																{{ Ges_CuartoNivel.count_auditorias }}</span>
+															{% endif %}
+														</a>
+                                                    </td>
+                                                </tr>
+                                            {% endfor %}
+
+									</tbody>
+								</table>
+							</div>
+
+     {% else %}
+      <p>No hay registros en la lista</p>
+    {% endif %}
+						</section>
+{% endblock %}
+</body>
+</html>

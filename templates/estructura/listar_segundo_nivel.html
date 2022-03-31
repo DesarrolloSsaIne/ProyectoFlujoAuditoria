@@ -1,0 +1,70 @@
+{% extends 'base/base.html' %}
+{% load sitetree %}
+
+{% block title %}
+Estructura Segundo Nivel
+{% endblock %}
+{% block content %}
+
+<section class="panel">
+							<header class="panel-heading">
+								<div class="panel-actions">
+
+									<button type="button" class="volver btn btn-sm btn-info"  name="button" title="Volver" >
+      								<span class="fa fa-reply"></span></button>
+
+
+
+
+								</div>
+
+								<h2 class="panel-title">Gestión Segundo Nivel</h2>
+							</header>
+        {% if ObjectList %}
+
+							<div class="panel-body">
+								<table class="table table-bordered  mb-none" id="datatable-default">
+									<thead>
+										<tr>
+                                            <th>Dependencia</th>
+											<th>Descripción Nivel</th>
+											<th>Opción</th>
+										</tr>
+									</thead>
+									<tbody>
+                                            {% for Ges_SegundoNivel in ObjectList %}
+                                                <tr>
+                                                    <td> {{ Ges_SegundoNivel.primer_nivel }}</td>
+                                                    <td> {{ Ges_SegundoNivel.descripcion_nivel }}</td>
+
+                                                    <td style="width:90px; text-align:center;">
+															 <a type="button" title="Ir a Tercer Nivel" id="TercerNivel" href="{% url 'TercerNivel' Ges_SegundoNivel.id %}"  class="btn btn-sm btn-primary"   >
+														<span class="fa fa-bars"></span></a>
+
+                                                    </td>
+
+                                                </tr>
+                                            {% endfor %}
+
+									</tbody>
+								</table>
+							</div>
+
+     {% else %}
+      <p>No hay registros en la lista</p>
+    {% endif %}
+						</section>
+
+	{% block extrajs %}
+<script type="text/javascript">
+
+
+
+$( ".volver" ).click(function() {
+  $(location).attr('href', '{% url 'PrimerNivel'  %}')
+});
+
+</script>
+{% endblock %}
+{% endblock %}
+

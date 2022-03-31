@@ -1,0 +1,150 @@
+{% load staticfiles %}
+<!doctype html>
+<html lang="es">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link href="{% static 'css/login/css.css' %}" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'fonts/login/icomoon/style.css' %}">
+    <link rel="stylesheet" href="{% static 'css/login/owl.carousel.min.css' %}">
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="{% static 'css/login/bootstrap.min.css' %}">
+    <!-- Style -->
+    <link rel="stylesheet" href="{% static 'css/login/style.css' %}">
+    <title>Login | Gestión de Flujos Auditoría  | TESTING</title>
+  </head>
+  {% block content %}
+  <body>
+
+  <div class="content">
+
+    <div class="container">
+      <div class="row">
+        <div class="col-md-6">
+
+          <img src="{% static 'images/login/undraw_remotely_2j6y.png' %}" alt="Image" class="img-fluid">
+        </div>
+        <div class="col-md-6 contents">
+          <div class="row justify-content-center">
+            <div class="col-md-8">
+
+              <div class="mb-4" style="text-align:center;">
+                <img width="120" height="120" style="text-align:center;" src="{% static 'images/login/logo_2.png' %}" alt="Image" class="img-fluid">
+              <p style="margin-top:15px; font-size:25px; color:#777777">Gestión de Flujos Auditoría | TESTING</p>
+<!--              <p class="mb-4">S.F.A</p>-->
+            </div>
+
+            <form  method="post" action="" class="auth-form" autocomplete="off"  >
+              {% csrf_token %}
+
+
+<!--              NO BORRAR EVITA EL AUTOCOMPLETADO AL CARGAR EL LOGIN-->
+              <div style="display: none;">
+                <input type="text" name="username_fake"  autocomplete="new-password">
+                <input type="password" name="password_fake" autocomplete="new-password">
+              </div>
+
+
+              <div class="form-group first">
+
+              <label for="username">Nombre de Usuario:</label>
+
+              <input type="text" id="username" name="username"  class="form-control" required=""  maxlength="40">
+
+              </div>
+              <div class="form-group last mb-4">
+
+                <label for="password">Password:</label>
+
+                <input type="password" id="password" name="password"  class="form-control"  required=""  maxlength="40">
+
+              </div>
+
+<!--              <button class="btn btn-block btn-primary"  type="submit" >Ingresar</button>-->
+
+                 <button class="btn btn-lg btn-primary btn-block" type="submit">Ingresar</button>
+          <input type="hidden" name="next" value="{{ next }}" />
+
+        <!-- Mensajes de Validación -->
+        {% if messages %}
+     <div class="alert alert-danger" style="background-color: red; color:white; font-size:10px;"  role="alert" align="left" >
+        {% for message in messages %}
+
+{% if '1' in message.tags %}
+<div>
+  <p style="color:white; ">Estimado(a):</p>
+  <ul>
+
+      <li style="color:white; list-style-type: disc;">Su usuario no pertenece a un grupo del sistema.</li>
+
+
+  </ul>
+  <p style="color:white;">Ante cualquier consulta favor realizarla a auditoria@ine.gob.cl</p>
+</div>
+
+{% endif %}
+
+
+
+
+{% if '2' in message.tags %}
+<div>
+  <p style="color:white; ">Estimado(a) para ingresar al sistema por favor considerar lo siguiente:</p>
+  <ul>
+
+      <li style="color:white; list-style-type: disc;">Utilizar credencial INE, es decir, ingresar los mismos datos utilizados para iniciar sesión en su computador institucional.</li>
+      <li style="color:white; list-style-type: disc;">Asegúrese que su contraseña no se encuentre caducada. </li>
+      <li style="color:white; list-style-type: disc;">Ingrese correctamente los caracteres de su credencial y contraseña (minúscula, mayúscula, símbolos, números, etc.) </li>
+
+  </ul>
+  <p style="color:white;">De lo contrario, informe de su inconveniente adjuntando un print de pantalla al correo electrónico auditoria@ine.gob.cl</p>
+</div>
+
+{% endif %}
+
+
+
+{% if '3' in message.tags %}
+<div>
+  <p style="color:white; ">Estimado(a) para ingresar al sistema por favor considerar lo siguiente:</p>
+  <ul>
+
+      <li style="color:white; list-style-type: disc;">Utilizar credencial INE, es decir, ingresar los mismos datos utilizados para iniciar sesión en su computador institucional.</li>
+      <li style="color:white; list-style-type: disc;">Asegúrese que su contraseña no se encuentre caducada. </li>
+      <li style="color:white; list-style-type: disc;">Ingrese correctamente los caracteres de su credencial y contraseña (minúscula, mayúscula, símbolos, números, etc.) </li>
+
+  </ul>
+  <p style="color:white;">De lo contrario, informe de su inconveniente adjuntando un print de pantalla al correo electrónico auditoria@ine.gob.cl</p>
+</div>
+
+{% endif %}
+
+
+        {% endfor %}
+      </div>
+      {% endif %}
+       <!-- /Mensajes de Validación -->
+
+
+                <br>
+                <p style="font-size:9px; text-align: center;">2021 | Subdepartamento Sistemas Transversales</p>
+            </form>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+
+    <script src="{% static 'js/login/jquery-3.3.1.min.js' %}"></script>
+    <script src="{% static 'js/login/popper.min.js' %}"></script>
+    <script src="{% static 'js/login/bootstrap.min.js' %}"></script>
+    <script src="{% static 'js/login/main.js' %}"></script>
+  </body>
+
+{% endblock %}
+</html>

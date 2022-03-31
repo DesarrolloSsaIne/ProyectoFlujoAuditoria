@@ -1,0 +1,69 @@
+<header class="panel-heading">
+    <div class="panel-actions">
+        <a class="fa fa-times" data-dismiss="modal"></a>
+    </div>
+    <h2 class="panel-title">Enviar Compromiso a Revisión</h2>
+</header>
+
+<form method="post" action="">
+
+    <div class="panel-body">
+        {% csrf_token %}
+
+        <div class="{% if form.non_field_errors %}invalid{% endif %} mb-2">
+            {% for error in form.non_field_errors %} {{ error }} {% endfor %}
+        </div>
+
+        <div class="col-md-12">
+
+            <div class="modal-wrapper">
+                <div class="modal-icon">
+                    <i class="fa fa-warning"></i>
+                        </div>
+                    <div class="modal-text">
+                        <strong><h4>Atención</h4></strong>
+                        <p>¿Está seguro que desea enviar su compromiso a revisión?</p>
+                    </div>
+                </div>
+
+                <br>
+            <br>
+
+					<div class="alert alert-warning" role="alert">
+                      Al presionar "Confirmar" se enviará el compromiso a los auditores correspondientes.
+                    </div>
+
+
+        </div>
+
+    </div>
+
+    <div class="modal-footer">
+                   <div id="enviar" style="display:none; text-align:left; " class="alert alert-info" role="alert">
+            Enviando correos, favor espere...
+            </div>
+        <button class="estado btn btn-danger" type="submit" id="confirmar">Confirmar</button>
+        <button class="btn btn-default" type="button" id="cancelar"   data-dismiss="modal">Cancelar</button>
+    </div>
+
+    <div class="alert alert-danger" style="display:none;" id="mjeError">
+
+        <p id="textError"></p>
+    </div>
+
+</form>
+
+<script>
+
+ $('#confirmar').click(function() {
+
+
+
+                $( this ).hide();
+                $( '#cancelar' ).hide();
+                 $( '#enviar' ).fadeIn();
+
+
+
+ });
+</script>

@@ -1,0 +1,227 @@
+{% extends 'base/base.html' %}
+{% block title %}
+Gestionar Hallazgos
+{% endblock %}
+{% block content %}
+
+{% if messages %}
+		  {% for message in messages %}
+
+			<div style="border-radius:0;" {% if message.tags %} id="danger-alert" class="{{request.session.message_class}} fade show mb-0" role="alert" {% endif %}>
+			  {{ message }}
+			  <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+				<span aria-hidden="true">&times;</span>
+			  </button>
+			</div>
+
+		  {% endfor %}
+
+	{% endif %}
+
+	<section class="panel">
+							<header class="panel-heading">
+								<div class="panel-actions">
+				<button type="button" class="volver btn btn-sm btn-info"  name="button" title="Volver" data-toggle="tooltip" data-original-title="Tooltip on bottom" data-placement="top" >
+      								<span class="fa fa-reply"></span></button>
+
+									 <a  type="button" style="width:30px; height:30px; "  class="btn btn-sm btn-success"  name="button" title="Descargar Reporte Xls" data-toggle="tooltip" data-original-title="Tooltip on bottom" data-placement="top" href="{% url 'exporta_reporte_auditoria_auditado_xls' user.id %}">
+														 <span style="margin-left:-1px; " class="fa fa-file-excel-o"></span></a>
+
+
+<!--  							<button type="button" class="volver btn btn-sm btn-info"  name="button" title="Volver" data-toggle="tooltip" data-original-title="Tooltip on bottom" data-placement="top" >-->
+<!--      								<span class="fa fa-reply"></span></button>-->
+
+
+
+									<!--<a href="#" class="fa fa-times"></a>-->
+								</div>
+
+
+								<h2 class="panel-title">  Listado Hallazgos Asignados </h2>
+
+							</header>
+							<div class="panel-body">
+								<table class="table table-bordered table-striped mb-none" id="datatable-default">
+									<thead>
+										<tr>
+
+                                            <th>#</th>
+											<th>Descripción</th>
+											<th>Recomendación</th>
+											<th>Área</th>
+											<th>Responsable</th>
+
+											<th>Estado</th>
+                                            <th>Opciones</th>
+										</tr>
+									</thead>
+									<tbody>
+
+                                            {% for hallazgos in object_list %}
+                                                <tr>
+
+<!--                                                    <td>{{ hallazgos.id }} </td>-->
+													<td>{{ hallazgos.numero_hallazgo }} </td>
+													<td id="ExpandHallazgoDescripcion" > <p class="Mitexto" >{{hallazgos.descripcion_hallazgo}}</p></td>
+													 <td>{{ hallazgos.recomendacion }} </td>
+
+														<td>{{ hallazgos.jefatura_id.id_nivel }} </td>
+														<td>{{ hallazgos.jefatura_id }} </td>
+<!--													<td>{{ hallazgos.id_auditoria.descripcion_auditoria }} </td>-->
+
+<!--                                                    <td>{{ hallazgos.proceso }} </td>-->
+
+<!--													<td id="ExpandHallazgo"  ><p  class="Mitexto" >{{ hallazgos.descripcion_hallazgo }}</p> </td>-->
+<!--													<td>{{ hallazgos.jefatura_id.id_nivel }} </td>-->
+<!--&lt;!&ndash;													<td>{{ hallazgos.jefatura_id.id_user }} </td>&ndash;&gt;-->
+<!--													<td>{% if hallazgos.enc_gestion_id == None  %}-{% else %}{{ hallazgos.enc_gestion_id }} {% endif %} </td>-->
+													<td>{{ hallazgos.id_estadoshallazgo.descripcion_estado }} </td>
+
+
+
+    												 <td style="width:120px;">
+
+
+															<a type="button" title="Ver Compromisos" data-toggle="tooltip" data-original-title="Tooltip on bottom" data-placement="top"  id="" href="{% url 'CompromisoListar' hallazgos.id %}"  class="btn btn-sm btn-success notification_auditores"   >
+														<span class="fa fa-bars"></span>
+
+														  </a>
+
+														 	<button type="button"  title="Detalle Hallazgo" data-toggle="tooltip" data-original-title="Tooltip on bottom" data-placement="top"  class="update btn btn-sm btn-warning"  data-id="{% url 'hallazgoDetalleCompromiso' hallazgos.id %}"  >
+															<span class="fa fa-search" ></span>
+
+															</button>
+
+														 	 	<button {% if hallazgos.id_estadoshallazgo_id != 1  %}  disabled {% endif %} type="button"  title="Reasignar Encargado de Gestionar el Compromiso " data-toggle="tooltip" data-original-title="Tooltip on bottom" data-placement="top"  class="update btn btn-sm btn-primary"  data-id="{% url 'HallazgoAsignaEg' hallazgos.id %}"  >
+															<span class="fa fa-user" ></span>
+
+															</button>
+                                                    </td>
+                                                </tr>
+                                            {% endfor %}
+
+
+									</tbody>
+								</table>
+
+							</div>
+						</section>
+
+
+        <div class="modal fade" id="observacion_center" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+          <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+
+				<header class="panel-heading">
+				<div class="panel-actions">
+				<a class="fa fa-times" data-dismiss="modal"></a>
+				</div>
+				<h2 class="panel-title">Descripción Hallazgo</h2>
+			</header>
+
+              <div class="modal-body">
+               	<textarea id="txt_obs_campo_expand" rows="15" cols="80" class="form-control" style="width:100%;resize: none; " maxlength="5000" readonly  ></textarea>
+
+              </div>
+
+
+
+              <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+     <div class="modal fade" id="observacion_centerAuditoria" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+          <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+
+				<header class="panel-heading">
+				<div class="panel-actions">
+				<a class="fa fa-times" data-dismiss="modal"></a>
+				</div>
+				<h2 class="panel-title">Descripción Hallazgo</h2>
+			</header>
+
+              <div class="modal-body">
+               	<textarea id="txt_obs_campo_expandAuditoria" rows="15" cols="80" class="form-control" style="width:100%;resize: none; " maxlength="5000" readonly  ></textarea>
+
+              </div>
+
+
+
+              <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+
+
+<div class="modal fade" tabindex="-1" role="dialog" id="modalUpdate">
+  <div class="modal-dialog modal-md" role="document">
+	<div class="modal-content">
+
+    </div>
+  </div>
+</div>
+
+
+
+<!--Fin cabecera del modal -->
+
+
+
+	{% block extrajs %}
+
+
+
+<script type="text/javascript">
+
+
+
+
+
+
+
+     // Js Muestra/Oculta Mensaje Success
+   	 $(".alert").fadeTo(2000, 500).slideUp( "slow", function() {
+     $(this).remove();
+  });
+
+   	 // JS modal actualiza Registro
+   $(".update").each(function () {
+   $(this).modalForm({formURL: $(this).data('id'),  modalID: $("#modalUpdate")});
+
+    });
+
+$('#datatable-default').on('click', '#ExpandHallazgo', function () {
+    $('#txt_obs_campo_expand').val($(this).parents('tr').find('td:nth-child(2)').text())
+    $('#observacion_center').modal('toggle');
+});
+$('#datatable-default').on('click', '#ExpandHallazgoDescripcion', function () {
+    $('#txt_obs_campo_expandAuditoria').val($(this).parents('tr').find('td:nth-child(2)').text())
+    $('#observacion_centerAuditoria').modal('toggle');
+});
+
+$(".volver").click(function() {
+     var url = '{% url 'AuditoriasListarAuditado'  %}';
+
+    window.location.href = url
+    return false;
+});
+
+</script>
+
+
+		{% endblock %}
+
+
+
+{% endblock %}

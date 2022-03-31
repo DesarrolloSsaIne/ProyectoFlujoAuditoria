@@ -1,0 +1,360 @@
+	<header class="panel-heading">
+				<div class="panel-actions">
+				<a class="fa fa-times" data-dismiss="modal"></a>
+				</div>
+				<h2 class="panel-title">Registro Compromisos</h2>
+	</header>
+
+			<form  method="post"  action="" >
+
+				<div class="panel-body">
+					{% csrf_token %}
+
+					 <div class="{% if form.non_field_errors %}invalid{% endif %} mb-2">
+    					  {% for error in form.non_field_errors %}
+        					{{ error }}
+     					 {% endfor %}
+    				</div>
+<input style="display:none;"  id="id_compromiso" type="text" value="{{ compromisos.id }}">
+
+		<div class="alert" id="modalValidacion" style="display:none" role="alert">
+		  <strong>Mensaje: </strong> <label id="mensajeError"></label>.
+		  <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+			<span aria-hidden="true">&times;</span>
+		  </button>
+		</div>
+
+                <div class="row">
+                    <div class="col-md-12">
+                        <div  class="form-group">
+
+                            <label >Descripción Compromiso</label>
+					            {{ form.descripcion_compromiso }}
+
+                        </div>
+                    </div>
+
+					 <div class="col-md-12">
+                        <div  class="form-group">
+
+                            <label >Medio Verificación</label>
+					            {{ form.medio_verificacion }}
+
+                        </div>
+                    </div>
+
+
+
+                                        <div class="col-md-12">
+
+						 <label >Plazo Implementación</label>
+							 <div class="input-group">
+								<span class="input-group-addon">
+									<i class="fa fa-calendar"></i>
+								</span>
+								<input disabled id="plazo_implementacion"  type="date" class="form-control" aria-valuetext="{{ form.plazo_implementacion }} <!--">-->
+							 </div>
+
+					 </div>
+
+
+										 <div class="col-md-12">
+                        <div  class="form-group">
+
+                            <label >Comentario Para Auditor (opcional)</label>
+					            {{ form.comentario_compromiso }}
+
+                        </div>
+
+                    </div>
+
+
+                    							 <div class="col-md-12">
+                        <div  class="form-group">
+
+                            <label >Comentario del Auditor</label>
+<!--					            {{ form.comentario_auditor }}-->
+
+
+
+                            <textarea  id="comentario_auditor" type="text" value="{{ form.comentario_auditor }}<!--">--></textarea>
+
+                        </div>
+											   <br>
+                    </div>
+
+
+
+
+
+			</div>
+
+
+
+			<div class="modal-footer">
+
+                		<button type="button"  title="Aceptar Compromiso"   data-toggle="tooltip" data-original-title="Tooltip on bottom" data-placement="bottom" class="aceptar btn btn-success" data-id="">
+                            <span class="fa fa-check-circle"></span> Aceptar</button>
+				<button type="button"  title="Rechazar Compromiso"     data-toggle="tooltip" data-original-title="Tooltip on bottom" data-placement="bottom" class="rechazar btn btn-danger" data-id="">
+                            <span class="fa fa-ban"></span> Rechazar</button>
+
+<!--                <button class="btn btn-primary" type="submit" id="confirmar"  >Guardar</button>-->
+
+				<button class="btn btn-default" type="button" data-dismiss="modal">Cancelar</button>
+			</div>
+
+				<div class="alert alert-danger" style="display:none;" id="mjeError">
+
+										<p id="textError"></p>
+				</div>
+
+                    </div>
+
+			</form>
+
+
+	<div class="modal valida" id="confirm-plan" tabindex="-1" role="dialog">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+    <header class="panel-heading">
+				<div class="panel-actions">
+
+				</div>
+				<h2 class="panel-title">Aceptar Estado Actividad</h2>
+			</header>
+      <div class="modal-body">
+
+<form method="post" action="" id="post-form">
+  {% csrf_token %}
+    <div class="panel-body">
+    <div class="modal-wrapper">
+        <div class="modal-icon">
+            <i class="fa fa-warning"></i>
+                </div>
+            <div class="modal-text">
+                <h4>Atención</h4>
+				<p>¿Está seguro que desea <strong style="color:green;">ACEPTAR</strong> el compromiso recibido?. <br> <strong style="color:red;">Una vez aceptado no se podrá deshacer el cambio.</strong> </p>
+
+
+            </div>
+        </div>
+    </div>
+            <div id="enviar" style="display:none; text-align:left; " class="alert alert-info" role="alert">
+            Enviando correos, favor espere...
+       		 </div>
+  <div class="modal-footer">
+    <button id="confirmar_valida" class="btn btn-danger" type="submit" >Confirmar</button>
+     <button id="cancelar_valida" class="btn btn-default" type="button"  onclick="$('#confirm-plan').hide();" >Cancelar</button>
+  </div>
+
+</form>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+			<div class="modal" id="confirm-plan-rechaza" tabindex="-1" role="dialog">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+    <header class="panel-heading">
+				<div class="panel-actions">
+
+				</div>
+				<h2 class="panel-title">Rechazar Estado Actividad</h2>
+			</header>
+      <div class="modal-body">
+
+<form method="post" action="" id="post-form-rechaza">
+  {% csrf_token %}
+    <div class="panel-body">
+    <div class="modal-wrapper">
+        <div class="modal-icon">
+            <i class="fa fa-warning"></i>
+                </div>
+            <div class="modal-text">
+                <h4>Atención</h4>
+				<p>¿Está seguro que desea <strong style="color:red;">RECHAZAR</strong> el compromiso recibido?. <br> <strong style="color:red;">Una vez rechazado no se podrá deshacer el cambio.</strong> </p>
+
+			</div>
+
+        </div>
+    </div>
+
+            <div id="enviar_rechaza" style="display:none; text-align:left; " class="alert alert-info" role="alert">
+            Enviando correos, favor espere...
+       		 </div>
+  <div class="modal-footer">
+    <button id="confirmar_rechaza" class="btn btn-danger" type="submit" >Confirmar</button>
+     <button id="cancelar_rechaza" class="btn btn-default" type="button" onclick="$('#confirm-plan-rechaza').hide();">Cancelar</button>
+  </div>
+
+</form>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+	<script>
+
+$('#modalUpdate').on("click", ".aceptar", function(event){
+  $('#confirm-plan').show();
+});
+
+
+
+$( ".rechazar" ).click(function() {
+
+comentario_auditor = $("#comentario_auditor").val();
+
+if(comentario_auditor == ''){
+
+        $("#mjeError").css("display","block");
+        $("#textError").text("Error : Para rechazar el compromiso primero debe agregar un comentario");
+        return false
+
+}else{
+
+       // $("#mjeError").css("display","none");
+        $('#confirm-plan-rechaza').show();
+
+}
+
+
+});
+
+
+
+
+
+$(document).on('submit', '#post-form-rechaza',function(e){
+     e.preventDefault();
+
+     $( '#cancelar_rechaza' ).hide();
+     $( '#confirmar_rechaza' ).hide();
+     $( '#enviar_rechaza' ).fadeIn();
+
+	var comentario_auditor = $('#comentario_auditor').val()
+
+
+    $.ajax({
+        type:'POST',
+        url:'{% url "compromiso_rechaza_auditor" %}',
+        data:{
+
+            csrfmiddlewaretoken:$('input[name=csrfmiddlewaretoken]').val(),
+            id_compromiso: $('#id_compromiso').val(),
+            comentario_auditor:comentario_auditor,
+            estado_rechazado:3,
+            action: 'post'
+        },
+        success:function(json){
+
+        $("#confirm-plan-rechaza").hide();
+        $("#modalValidacion").removeClass( "alert-danger" ).addClass("alert-success");
+       	$("#modalValidacion").css("display","block");
+		$("#mensajeError").text(json.error);
+		$(".aceptar, .rechazar").css("display", "none")
+		setInterval(function() {
+			window.location.reload();
+		}, 1000);
+
+        },
+
+
+        error : function(json,xhr,errmsg,err) {
+
+        $('#confirm-plan-rechaza').hide();
+        $("#modalValidacion").removeClass( "alert-success" ).addClass("alert-danger");
+		$("#modalValidacion").css("display","block");
+		$("#mensajeError").text(json.error + "post:" + xhr.responseText);
+        console.log(xhr.status + ": " + xhr.responseText);
+
+    }
+    });
+});
+
+
+
+
+
+$(document).on('submit', '#post-form',function(e){
+     e.preventDefault();
+
+
+     $( '#cancelar_valida' ).hide();
+     $( '#confirmar_valida' ).hide();
+     $( '#enviar' ).fadeIn();
+
+	var comentario_auditor = $('#comentario_auditor').val()
+
+
+    $.ajax({
+        type:'POST',
+        url:'{% url "compromiso_acepta_auditor" %}',
+        data:{
+
+            csrfmiddlewaretoken:$('input[name=csrfmiddlewaretoken]').val(),
+            id_compromiso: $('#id_compromiso').val(),
+            comentario_auditor:comentario_auditor,
+            estado_aceptado:4,
+            action: 'post'
+        },
+        success:function(json){
+
+        $("#confirm-plan").hide();
+        $("#modalValidacion").removeClass( "alert-danger" ).addClass("alert-success");
+       	$("#modalValidacion").css("display","block");
+		$("#mensajeError").text(json.error);
+		$(".aceptar, .rechazar").css("display", "none")
+		setInterval(function() {
+			window.location.reload();
+		}, 1000);
+
+        },
+
+
+        error : function(json,xhr,errmsg,err) {
+
+        $('#confirm-plan').hide();
+        $("#modalValidacion").removeClass( "alert-success" ).addClass("alert-danger");
+		$("#modalValidacion").css("display","block");
+		$("#mensajeError").text(json.error + "post:" + xhr.responseText);
+        console.log(xhr.status + ": " + xhr.responseText);
+
+    }
+    });
+});
+
+
+
+
+
+
+
+
+$(function() {
+       $('#siteID').select2({
+        dropdownParent: $('#modalCreate')
+    });
+
+});
+
+$(function() {
+       $('#siteID2').select2({
+        dropdownParent: $('#modalCreate')
+    });
+
+
+
+
+
+
+});
+
+	</script>

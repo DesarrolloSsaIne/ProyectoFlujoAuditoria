@@ -1,0 +1,121 @@
+{% extends 'base/base.html' %}
+{% load sitetree %}
+
+{% block title %}
+Panel Resúmen
+{% endblock %}
+
+{% block extrajs %}
+
+
+<script type="text/javascript">
+
+</script>
+
+{% endblock %}
+
+
+{% block content %}
+
+
+{% if GrupoDashboard == 'GrupoDirector' %}
+
+
+
+<div class="col-md-6" >
+<section class="panel">
+
+<div class="panel-body" style="background-color: #0088cc; color: white; height:35px;">
+
+
+<h5 style=" text-align:left; margin-top:-5px;">Auditorías Abiertas: {{ total_auditorias.abiertas}}</h5>
+
+</div>
+</section>
+</div>
+
+<div class="col-md-6">
+<section class="panel">
+
+<div class="panel-body" style="background-color: #0088cc; color: white; height:35px;">
+
+<h5 style=" text-align:left; margin-top:-5px;">Auditorías Cerradas: {{total_auditorias.cerradas}}</h5>
+
+
+</div>
+</section>
+</div>
+
+
+
+<div class="col-md-12">
+<section class="panel">
+
+
+											<div class="panel-body">
+												<div class="row text-center">
+													<div class="col-md-2">
+														<div  class="circular-bar">
+															<div class="circular-bar-chart" data-percent="{{auditorias.total_institucional_per}}" data-plugin-options='{"size": 127, "barColor": "#70ad47", "delay": 300 }'>
+																<strong style="font-size:13px;" >Institucional</strong>
+																<label><span style="font-size:14px; " class="percent">{{auditorias.total_institucional_per}}</span>%</label>
+																<label style="margin-top:20px; margin-left:-2px; font-size:14px;"><span class="">({{auditorias.total_institucional}})</span></label>
+															</div>
+														</div>
+													</div>
+													<div class="col-md-3">
+														<div class="circular-bar">
+															<div class="circular-bar-chart" data-percent="{{auditorias.total_ministerial_per}}" data-plugin-options='{"size": 127, "barColor": "#2BAAB1", "delay": 600 }'>
+																<strong style="font-size:13px;">Ministerial</strong>
+																<label><span style="font-size:14px; " class="percent">{{auditorias.total_ministerial_per}}</span>%</label>
+																<label style="margin-top:20px; margin-left:-2px; font-size:14px;"><span class="">({{auditorias.total_ministerial}})</span></label>
+															</div>
+														</div>
+													</div>
+
+													<div class="col-md-2">
+														<div class="circular-bar">
+															<div class="circular-bar-chart" data-percent="{{auditorias.total_gubernamental_per}}" data-plugin-options='{ "size": 127,"barColor": "#e6ac00", "delay": 600 }'>
+																<strong style="font-size:13px;">Gubernamental</strong>
+																<label><span style="font-size:14px; " class="percent">{{auditorias.total_gubernamental_per}}</span>%</label>
+																<label style="margin-top:20px; margin-left:-2px; font-size:14px;"><span class="">({{auditorias.total_gubernamental}})</span></label>
+															</div>
+														</div>
+													</div>
+													<div  class="col-md-3">
+														<div  class="circular-bar">
+															<div  class="circular-bar-chart" data-percent="{{auditorias.total_extraordinaria_per}}" data-plugin-options='{"size": 127, "barColor": "#ca3939", "delay": 600 }'>
+																<strong style="font-size:13px;">Extraordinaria</strong>
+																<label><span style="font-size:14px; " class="percent">{{auditorias.total_extraordinaria_per}}</span>%</label>
+																<label style="margin-top:20px; margin-left:-2px; font-size:14px;"><span class="">({{auditorias.total_extraordinaria}})</span></label>
+															</div>
+														</div>
+													</div>
+																										<div  class="col-md-2">
+														<div  class="circular-bar">
+															<div  class="circular-bar-chart" data-percent="{{auditorias.total_otra_per}}" data-plugin-options='{"size": 127, "barColor": "#81a9da", "delay": 600 }'>
+																<strong style="font-size:13px;">Otros</strong>
+																<label><span style="font-size:14px; " class="percent">{{auditorias.total_otra_per}}</span>%</label>
+																<label style="margin-top:20px; margin-left:-2px; font-size:14px;"><span class="">({{auditorias.total_otra}})</span></label>
+															</div>
+														</div>
+													</div>
+
+
+
+
+												</div>
+												<div style="text-align:right;">Total Auditorías: {{total_auditorias_suma.total}}</div>
+											</div>
+
+										</section>
+
+</div>
+
+
+
+{% endif %}
+
+
+
+{% endblock %}

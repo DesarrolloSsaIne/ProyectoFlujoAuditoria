@@ -1,0 +1,21 @@
+.Mitexto {
+    display: -webkit-box;
+    max-width: 200px;
+    -webkit-line-clamp: 4;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    cursor:pointer;
+}
+
+.MitextoGrande {
+   cursor:pointer;
+   overflow: hidden;
+   text-overflow: ellipsis;
+    display: -webkit-box;
+   -webkit-line-clamp: 3; /* number of lines to show */
+   -webkit-box-orient: vertical;
+   -webkit-box-flex: 1;
+
+}
+
+

@@ -1,0 +1,212 @@
+{% extends 'base/base.html' %}
+{% block title %}
+Compromiso Asociado
+{% endblock %}
+{% block content %}
+
+{% if messages %}
+		  {% for message in messages %}
+
+
+			<div style="border-radius:0;" {% if message.tags %} id="danger-alert" class="{{request.session.message_class}} fade show mb-0" role="alert" {% endif %}>
+			  {{ message }}
+			  <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+				<span aria-hidden="true">&times;</span>
+			  </button>
+			</div>
+
+		  {% endfor %}
+
+	{% endif %}
+
+	<section class="panel">
+							<header class="panel-heading">
+								<div class="panel-actions">
+    <button  type="button" class="volver btn btn-sm btn-info"  name="button" title="Volver"  data-toggle="tooltip" data-original-title="Tooltip on bottom" data-placement="top"  >
+                                                                    <span class="fa fa-reply"></span></button>
+
+                                									<!--<a href="#" class="fa fa-times"></a>-->
+								</div>
+
+
+								<h2 style="padding-right:40px;" class="panel-title">  Compromiso Asociado al Hallazgo  |  {{ auditoria.numero }} | {{ auditoria.nombre }}</h2>
+
+							</header>
+							<div class="panel-body">
+								<table class="table table-bordered table-striped mb-none" id="datatable-default">
+									<thead>
+										<tr>
+                                            <th>#</th>
+											<th>Descripción Compromiso</th>
+											<th>Medio Verificación</th>
+                                            <th>Plazo</th>
+											<th>Responsable</th>
+                                            <th>Cargo</th>
+                                            <th>Hallazgo Asociado</th>
+                                            <th>Estado</th>
+                                            <th>Obs.</th>
+
+
+
+
+
+
+
+                                        </tr>
+									</thead>
+									<tbody>
+
+                                            {% for compromiso in object_list %}
+                                                <tr>
+
+                                                    <td> {{ compromiso.id }}</td>
+													<td id="ExpandCompromiso" class="Mitexto"  style="height:80px; width:100%; border-bottom:1px; border-left:0px; border-right:0px;  padding-top:-5px;"  > {% if compromiso.descripcion_compromiso == none %}  {%else%} {{ compromiso.descripcion_compromiso}} {%endif%}</td>
+                                                    <td> {% if compromiso.medio_verificacion  == none %}   {%else%} {{ compromiso.medio_verificacion }} {%endif%}</td>
+
+                                                    <td style="width:110px;"> <span style='display: none;'>{{compromiso.plazo_implementacion|date:"Ymd"}}</span> {{ compromiso.plazo_implementacion|date:"d-m-Y"}}</td>
+                                                    <td> {% if compromiso.responsable_hallazgo  == none %}   {%else%} {{ compromiso.responsable_hallazgo }} {%endif%}</td>
+													<td> {{ compromiso.cargo_responsable_id.descripcion_cargo}}</td>
+													<td id="ExpandHallazgo" class="Mitexto"  style="height:80px; width:100%; border-bottom:1px; border-left:0px; border-right:0px;  padding-top:-5px;"  > {{ compromiso.hallazgo_id }}</td>
+                                                    <td> {{ compromiso.estado_compromiso }}</td>
+
+                                                    <td>
+
+                                                        <button style="margin-bottom:2px;"  type="button" title="Observaciones del Compromiso" data-toggle="tooltip" data-original-title="Tooltip on bottom" data-placement="top" class="delete btn btn-sm btn-primary" data-id="{% url 'ObservacionesCompromisosObservador' compromiso.id %}">
+      													  <span class="fa fa-comments"></span></button>
+
+
+                                                    </td>
+                                                </tr>
+                                            {% endfor %}
+
+
+									</tbody>
+								</table>
+
+							</div>
+						</section>
+
+        <div class="modal fade" id="observacion_center" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+          <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+
+				<header class="panel-heading">
+				<div class="panel-actions">
+				<a class="fa fa-times" data-dismiss="modal"></a>
+				</div>
+				<h2 class="panel-title">Hallazgo Asociado</h2>
+			</header>
+
+              <div class="modal-body">
+               	<textarea id="txt_obs_campo_expand" rows="15" cols="80" class="form-control" style="width:100%;resize: none; " maxlength="5000" readonly  ></textarea>
+
+              </div>
+
+
+
+              <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+
+
+        <div class="modal fade" id="observacion_compromiso" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+          <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+
+				<header class="panel-heading">
+				<div class="panel-actions">
+				<a class="fa fa-times" data-dismiss="modal"></a>
+				</div>
+				<h2 class="panel-title">Descripción Compromiso</h2>
+			</header>
+
+              <div class="modal-body">
+               	<textarea id="txt_obs_compromiso_expand" rows="15" cols="80" class="form-control" style="width:100%;resize: none; " maxlength="5000" readonly  ></textarea>
+
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+
+
+<!--Cabecera del modal -->
+<div class="modal fade" tabindex="-1" role="dialog" id="modalCreate">
+  <div class="modal-dialog modal-md" role="document">
+	<div class="modal-content">
+
+    </div>
+  </div>
+</div>
+
+	<div class="modal fade" tabindex="-1" role="dialog" id="modalDetalle">
+  <div class="modal-dialog modal-xs" role="document">
+	<div class="modal-content">
+
+    </div>
+  </div>
+
+</div>
+<div class="modal fade" tabindex="-1" role="dialog" id="modalUpdate">
+  <div class="modal-dialog modal-md" role="document">
+	<div class="modal-content">
+
+    </div>
+  </div>
+</div>
+
+
+<div class="modal fade" tabindex="-1" role="dialog" id="modalDelete">
+  <div class="modal-dialog modal-xs" role="document">
+	<div class="modal-content">
+
+    </div>
+  </div>
+</div>
+<!--Fin cabecera del modal -->
+
+
+
+
+
+
+
+{% endblock %}
+
+{% block extrajs %}
+
+<script type="text/javascript">
+
+$( ".volver" ).click(function() {
+  $(location).attr('href', '{% url 'HallazgosListarVista' auditoria.id_hallazgo %}')
+});
+
+    // JS modal elimina Registro
+    $(".delete").each(function () {
+    $(this).modalForm({formURL: $(this).data('id'),  modalID: $("#modalDelete")});
+	});
+
+
+    $('#datatable-default').on('click', '#ExpandHallazgo', function () {
+    $('#txt_obs_campo_expand').val($(this).parents('tr').find('td:nth-child(7)').text())
+    $('#observacion_center').modal('toggle');
+});
+
+$('#datatable-default').on('click', '#ExpandCompromiso', function () {
+    $('#txt_obs_compromiso_expand').val($(this).parents('tr').find('td:nth-child(2)').text())
+    $('#observacion_compromiso').modal('toggle');
+});
+</script>
+
+{% endblock %}

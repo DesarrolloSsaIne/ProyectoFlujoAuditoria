@@ -1,0 +1,109 @@
+84
+Yo como responsable de área
+quiero disponer de botón "Enviar Compromiso a Auditor"
+para enviar compromiso al auditor para su revisión, observación u aprobación.
+
+
+El responsable de área es el único perfil que puede enviar compromiso al auditor.
+
+Una vez enviado el compromiso al auditor, el compromiso quedará con el estado "En validación de auditor".
+
+La información enviada no puede ser editada, modificada ni puede derivar hallazgo una vez enviado el compromiso al auditor. 
+
+Este envío puede ocurrir en 2 ocasiones:   
+Cuando el responsable de área ingresa el compromiso directamente.
+Cuando el responsable de área recibe compromiso por parte del "encargado de gestionar compromiso".
+
+
+descripcion_estado_compromiso = models.CharField(max_length=50, blank=True, null=True) /cambie de 20 a 50 + makemigrations
+compromiso_list.html
+compromiso_form_envia_ra.html (agregar)
+apps/jefaturas/models.py
+apps/compromisos/forms.py
+apps/compromisos/views.py
+
+----------------------------------------
+
+
+94
+Yo como auditor
+quiero disponer del campo "Comentarios del Auditor"
+para ingresar cometarios u observaciones al compromiso recibido
+
+El compromiso está compuesto por los siguientes campos:
+- Descripción del compromiso
+- Medio de verificación
+- Plazo de implementación
+- Cargo Responsable del hallazgo.
+- Nombre Responsable del hallazgo.
+
+Adicionalmente, se requiere incorporar campo "Comentarios del Auditor" para ingresar cometarios u observaciones al compromiso recibido
+El ingreso de información no será obligatorio si el compromiso es "Aceptado".  
+Sólo si el compromiso es "rechazado" este campo debe ser obligatorio.
+Este campo debe ser visualizado por todos los perfiles.
+
+Características del campo "Comentarios del Auditor":
+Ingreso manual de información.  
+1500 caracteres.  
+Debe permitir números y signos de puntuación.
+El ingreso de información debe ser obligatorio.
+
+
+templates/hallazgo_list.html
+compromisos/hallazgo_detalle_compromiso.html
+apps/compromisos/views.py
+apps/compromisos/urls.py
+apps/compromisos/models.py
+templates/compromisos/hallazgo_compromiso_auditor_list.html
+templates/compromiso_form_valida_auditor.html
+apps/compromisos/forms.py
+
+
+
+---------------------------------------------------
+
+115
+
+Yo como responsable de área
+quiero editar los campos del compromiso cada vez que el auditor "rechace" compromiso 
+para incorporar ajustes según corresponda
+
+Cada vez que el auditor "rechace" compromiso, el perfil "responsable del área" debe poder gestionar compromiso para proceder a los ajustes. 
+
+La gestión será según lo realizado inicialmente, es decir "ingresar compromiso" o "derivar compromiso" *** Como se derivará un compromiso que ya está ingresado? *** al igual que en el inicio del hallazgo. 
+
+Si en un principio el hallazgo fue derivado, cuando el "responsable de área" reciba el "rechazo", sólo deberá disponer del campo "ingresar comentarios" y botón "derivar" para que regrese al "encargado de gestionar compromiso"
+El campo ingresar comentarios, no debe ser obligatorio. 
+
+De lo contrario, si en un principio el responsable de área fue quien ingreso compromiso, el responsable de área, sólo deberá disponer del campo "ingresar comentarios" y botón "Enviar Compromiso a Auditor"
+
+
+templates/compromisos/compromisos_list.html
+templates/compromisos/bandeja_hallazgos_list.html
+apps/compromisos/forms.py
+apps/compromisos/views.py
+----------------------------------------------------------
+
+117
+
+Yo como auditor
+quiero que al "aceptar" compromiso el sistema genere alerta automática informativa
+para conocimiento del responsable de área
+
+Cuando el compromiso sea "aceptado" por el auditor y pase a estado "validado", el sistema deberá enviar un mensaje automático por correo electrónico al responsable de área, para información.
+
+El mensaje automático debe decir:
+Estimado/a, en el marco de la auditoria en curso CÓDIGO + NOMBRE DE LA AUDITORIA realizada por el Depto de Auditoria Institucional, se informa que su compromiso se encuentra validado.
+ El link de acceso es http://10.91.160.63:81/accounts/login/
+Agradeciendo desde ya su gestión y participación, saludos cordiales,  
+Depto de Auditoria Institucional
+
+apps/compromisos/views.py
+templates/compromisos/compromiso_form_valida_auditor.html
+
+
+estado 3
+grupo 4 (enc_gestion)
+
+
+

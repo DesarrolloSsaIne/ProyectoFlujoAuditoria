@@ -1,0 +1,136 @@
+	<header class="panel-heading">
+				<div class="panel-actions">
+				<a class="fa fa-times" data-dismiss="modal"></a>
+				</div>
+				<h2 class="panel-title">Editar Responsable Compromiso</h2>
+	</header>
+
+			<form  method="post"  action="" >
+
+				<div class="panel-body">
+					{% csrf_token %}
+
+					 <div class="{% if form.non_field_errors %}invalid{% endif %} mb-2">
+    					  {% for error in form.non_field_errors %}
+        					{{ error }}
+     					 {% endfor %}
+    				</div>
+
+
+
+
+
+                    <div class="col-md-12">
+                        <div  class="form-group">
+
+                            <label >Responsable Compromiso</label>
+					            {{ form.responsable_hallazgo}}
+
+                        </div>
+                    </div>
+
+
+
+                    <div class="col-md-12">
+                        <div  class="form-group">
+
+                            <label >Cargo Responsable</label>
+					            {{ form.cargo_responsable_id}}
+
+                        </div>
+
+                    </div>
+
+
+
+
+
+
+
+
+			</div>
+
+			<div class="modal-footer">
+                <button class="btn btn-primary" type="submit" id="confirmar"  >Aceptar</button>
+				<button class="btn btn-default" type="button" data-dismiss="modal">Cancelar</button>
+			</div>
+
+				<div class="alert alert-danger" style="display:none;" id="mjeError">
+
+										<p id="textError"></p>
+				</div>
+
+                    </div>
+
+			</form>
+
+
+
+	<script>
+
+
+
+$(function() {
+       $('#siteID').select2({
+        dropdownParent: $('#modalCreate')
+    });
+
+});
+
+$(function() {
+       $('#siteID2').select2({
+        dropdownParent: $('#modalCreate')
+    });
+
+});
+
+
+$("#confirmar").click(function(){
+
+
+var anio_actual= moment().year();
+var anio_actual = anio_actual;
+
+//alert(anio_actual);
+
+fecha_inicio_auditoria = $("#fecha_inicio").val();
+fecha_termino = $("#fecha_termino").val();
+
+
+
+
+var valuesStart = fecha_inicio.split("-");
+var anio_inicio = valuesStart[0];
+
+    var valuesStart = fecha_termino.split("-");
+var anio_termino = valuesStart[0];
+
+
+if (anio_inicio==anio_actual && anio_termino==anio_actual){
+	//alert('ok');
+}else{
+	$("#mjeError").css("display","block");
+	$("#textError").text("Error : Las fechas seleccionadas deben corresponder al año en curso.");
+return false
+}
+
+
+if (moment(fecha_inicio).isBefore(fecha_termino)){
+	//alert('ok');
+}else{
+
+	$("#mjeError").css("display","block");
+	$("#textError").text("Error : La fecha de inicio no puede ser superior a la fecha de término.");
+return false
+}
+
+
+});
+
+//var sel = $('#siteID');
+//var selected = sel.val(); // cache selected value, before reordering
+//var opts_list = sel.find('option');
+//opts_list.sort(function(a, b) { return $(a).text() > $(b).text() ? 1 : -1; });
+//sel.html('').append(opts_list);
+//sel.val(selected); // set cached selected value
+	</script>

@@ -1,0 +1,88 @@
+<header class="panel-heading">
+    <div class="panel-actions">
+        <a class="fa fa-times" data-dismiss="modal"></a>
+    </div>
+    <h2 class="panel-title">Enviar Compromiso a Auditor</h2>
+</header>
+
+<form method="post" action="">
+
+    <div class="panel-body">
+        {% csrf_token %}
+
+        <div class="{% if form.non_field_errors %}invalid{% endif %} mb-2">
+            {% for error in form.non_field_errors %} {{ error }} {% endfor %}
+        </div>
+
+        <div class="col-md-12">
+
+
+            <div class="modal-wrapper">
+                <div class="modal-icon">
+                    <i class="fa fa-warning"></i>
+                        </div>
+                    <div class="modal-text">
+                        <h4>Atención</h4>
+                        <p>¿Está seguro de <strong>Enviar</strong> el compromiso al área de Auditoría para su validación?.</p>
+                    </div>
+                </div>
+
+            <br><br>
+            <div id="display_confirmar"  class="alert alert-warning" role="alert">
+                Al enviar el compromiso, este no podrá volver a ser editado.
+            </div>
+
+
+
+          {% if tiene_responsable == None %}
+
+           <div id="display_alerta"  class="alert alert-danger" role="alert">
+                Antes de enviar el compromiso debe ingresar un responsable.
+            </div>
+           {% endif%}
+
+
+
+        </div>
+
+    </div>
+       			<div id="enviar" style="display:none; text-align:left; " class="alert alert-info" role="alert">
+            Enviando correos, favor espere...
+       		 </div>
+
+    <div class="modal-footer">
+        {% if tiene_responsable != None %}
+        <button  class="estado btn btn-danger" type="submit" id="confirmar">Confirmar</button>
+        {% endif %}
+
+
+
+        <button class="btn btn-default" type="button" id="cancelar"  data-dismiss="modal">Cancelar</button>
+    </div>
+
+    <div class="alert alert-danger" style="display:none;" id="mjeError">
+
+        <p id="textError"></p>
+    </div>
+
+</form>
+
+
+{% block extrajs %}
+    <script type="text/javascript">
+        $(".estado").click(function () {
+            $('#id_estado_flujo').val('8');
+        });
+
+            $('#confirmar').click(function() {
+
+     $( this ).hide();
+     $( '#cancelar' ).hide();
+     $( '#confirmar' ).hide();
+     $( '#display_confirmar' ).hide();
+      $( '#enviar' ).fadeIn();
+
+
+});
+    </script>
+{% endblock %}

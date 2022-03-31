@@ -1,0 +1,306 @@
+	<header class="panel-heading">
+		<input style="display:none;"  id="id_hallazgo" type="text" value="{{ hallazgo.id }}">
+				<div class="panel-actions">
+				<a class="fa fa-times" data-dismiss="modal"></a>
+				</div>
+				<h2 class="panel-title">Actualizar Hallazgos   </h2>
+
+	</header>
+
+			<form  method="post"  action="" >
+
+				<div class="panel-body">
+					{% csrf_token %}
+
+					 <div class="{% if form.non_field_errors %}invalid{% endif %} mb-2">
+    					  {% for error in form.non_field_errors %}
+        					{{ error }}
+     					 {% endfor %}
+    				</div>
+
+
+                <div class="row">
+
+ 					<div class="col-md-3">
+                        <div  class="form-group">
+
+                            <label >N° de Hallazgo</label>
+					            {{ form.numero_hallazgo }}
+								<br>
+
+                        </div>
+                    </div>
+
+
+
+
+
+					<div class="col-md-12">
+					<div  class="form-group">
+
+                            <label >Responsable del hallazgo</label>
+					            {{ form.jefatura_id}}
+
+                        </div>
+
+						<div  class="form-group">
+
+                            <label >Cargo Responsable</label>
+					            {{ form.cargo_responsable_id}}
+
+                        </div>
+						</div>
+
+
+                    <div class="col-md-6">
+  						<div  class="form-group">
+
+                            <label >Proceso/Subproceso/Etapa/Proyecto/Otro</label>
+					            {{ form.proceso }}
+
+                        </div>
+
+
+
+					</div>
+					 <div class="col-md-6">
+
+                        <div  class="form-group">
+
+                            <label >Naturaleza del Trabajo</label>
+					            {{ form.naturaleza}}
+
+                        </div>
+
+
+			</div>
+
+	<div class="col-md-12">
+						<div  class="form-group">
+
+                            <label >Descripción del Hallazgo</label>
+					            {{ form.descripcion_hallazgo}}
+
+                    </div>
+		  				 <div  class="form-group">
+
+                            <label >Opinión Criticidad Micro</label>
+					            {{ form.opinion}}
+
+                        </div>
+
+						<div  class="form-group">
+
+                            <label >Anexo</label>
+					            {{ form.document}}
+
+                    </div>
+
+					    <div  class="form-group">
+
+                            <label >Criterios</label>
+					            {{ form.criterios}}
+
+                        </div>
+
+					 <div  class="form-group">
+
+                            <label >Causas</label>
+					            {{ form.causas}}
+                    </div>
+
+					 <div  class="form-group">
+
+                            <label >Efectos</label>
+					            {{ form.efectos }}
+
+                        </div>
+						<div  class="form-group">
+
+                            <label >¿Sumario?</label>
+					            {{ form.sumario}}
+
+                        </div>
+
+						   <div  class="form-group">
+
+                            <label >Recomendación</label>
+					            {{ form.recomendacion}}
+
+                        </div>
+							<label >Plazo Estimado</label>
+							 <div class="input-group">
+								<span class="input-group-addon">
+									<i class="fa fa-calendar"></i>
+								</span>
+								<input id="fecha_plazo_hallazgo"  type="date" class="form-control" aria-valuetext="{{ form.plazo }} <!--">-->
+							 </div>
+
+					 </div>
+
+
+
+			</div>
+
+			<div class="modal-footer">
+				<button class="btn btn-primary" type="submit" id="confirmar"  >Confirmar</button>
+				<button class="enviar btn btn-warning float-right" type="button">Enviar</button>
+				<button class="btn btn-default" type="button" data-dismiss="modal">Cancelar</button>
+			</div>
+
+				<div class="alert alert-danger" style="display:none;" id="mjeError">
+
+										<p id="textError"></p>
+				</div>
+
+                    </div>
+
+			</form>
+
+	<div class="modal" id="confirm-enviar-hallazgo" tabindex="-1" role="dialog" style="margin: 0px 0px 0px 95px">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+    <header class="panel-heading">
+				<div class="panel-actions">
+
+				</div>
+				<h2 class="panel-title">Validación actividad</h2>
+			</header>
+      <div class="modal-body">
+
+			<form method="post" action="" id="post-form-enviar">
+			  {% csrf_token %}
+				<div class="panel-body">
+				<div class="modal-wrapper">
+					<div class="modal-icon">
+						<i class="fa fa-warning"></i>
+							</div>
+						<div class="modal-text">
+							<h4>Atención</h4>
+							<p>¿Está seguro que desea <strong>enviar</strong> el Hallazgo?. </p>
+
+
+						</div>
+					</div>
+				</div>
+			  <div class="modal-footer">
+				<button class="btn btn-danger" type="submit" >Confirmar</button>
+				 <button class="btn btn-default" type="button" onclick="$('#confirm-enviar-hallazgo').hide();">Cancelar</button>
+			  </div>
+
+			</form>
+      </div>
+    </div>
+  </div>
+</div>
+
+	<script>
+	$(function() {
+
+       $('#siteID').select2({
+        dropdownParent: $('#modalCreate')
+    });
+
+});
+
+function numberOnly(id) {
+		var element = document.getElementById(id);
+		element.value = element.value.replace(/[^0-9]/gi, "");
+	}
+
+$('#modalUpdate').on("click", ".enviar", function(event){
+
+ if (!validarTxt('txt_numero')) {return false;}
+ if (!validarTxt('txt_proceso')) {return false;}
+ if (!validarTxt('fecha_plazo_hallazgo')) {return false;}
+ if (!validarTxt('txt_descripcion')) {return false;}
+ if (!validarTxt('txt_criterios')) {return false;}
+ if (!validarTxt('txt_causas')) {return false;}
+ if (!validarTxt('txt_efectos')) {return false;}
+ if (!validarTxt('txt_recomendacion')) {return false;}
+ if (!validarTxt('txt_proceso')) {return false;}
+ if (!validarListbox('id_opinion')) {return false;}
+ if (!validarListbox('id_sumario')) {return false;}
+ if (!validarListbox('id_naturaleza')) {return false;}
+
+    $('#confirm-enviar-hallazgo').show().scrollTop(0);
+
+});
+
+   function validarTxt(id) {
+        if ($("#" + id).val() == "") {
+            $("#" + id).css("border-color", "#FF0000");
+            alert('Faltan datos por llenar');
+            $("#" + id).focus();
+            return false;
+        } else {
+            $("#" + id).css("border-color", "");
+            return true;
+        }
+    };
+
+     function validarListbox(id) {
+
+        if ($("#" + id).val() == 0) {
+            $("#" + id).css("border-color", "#FF0000");
+            alert('Faltan datos Por llenar');
+            $("#" + id).focus();
+            return false;
+        } else {
+            $("#" + id).css("border-color", "");
+            return true;
+        }
+    };
+
+$(function() {
+
+//////////////enviar hallazgo//////////////////////
+
+
+ $(document).on('submit', '#post-form-enviar',function(e){
+     e.preventDefault();
+    $.ajax({
+        type:'POST',
+        url:'{% url "hallazgoUpdateEstado" %}',
+        data:{
+            id_hallazgo:$('#id_hallazgo').val(),
+            csrfmiddlewaretoken:$('input[name=csrfmiddlewaretoken]').val(),
+            estado_hallazgo:1,
+            action: 'post'
+        },
+        success:function(json){
+        $("#confirm-enviar-hallazgo").hide();
+      	alert(json.error);
+
+		 $('#confirm-plan').hide();
+		setInterval(function() {
+			window.location.reload();
+		}, 1000);
+
+        },
+        error : function(json, xhr,errmsg,err) {
+        $('#confirm-enviar-hallazgo').hide();
+		alert(json.error + "post:" + xhr.responseText);
+
+    }
+    });
+});
+
+});
+		</script>
+
+	<style>
+
+		@media (min-width: 576px)
+.modal-dialog-centered {
+    min-height: calc(100% - (1.75rem * 1));
+}
+
+.modal-dialog-centered {
+    display: -ms-flexbox;
+    display: flex;
+    -ms-flex-align: center;
+    align-items: center;
+    min-height: calc(100% - (.2rem * 1));
+}
+	</style>

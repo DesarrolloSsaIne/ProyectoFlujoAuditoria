@@ -1,0 +1,101 @@
+#notification {
+  position: relative;
+  display: inline-block;
+  border-radius: 2px;
+}
+
+#notification:hover {
+
+}
+
+#notification .badge {
+  position: absolute;
+  top: -10px;
+  right: -10px;
+  padding: 5px 10px;
+  border-radius: 50%;
+  background: red;
+  color: white;
+}
+
+
+
+
+#notification_ok {
+  position: relative;
+  display: inline-block;
+  border-radius: 1px;
+
+}
+
+#notification_ok:hover {
+
+}
+
+#notification_ok .badge {
+  position: absolute;
+  top: -8px;
+  right: -15px;
+  padding: 5px 10px;
+  border-radius: 60%;
+  background: #2ea32e;
+  color: white;
+  font-size:10px;
+
+
+}
+
+
+
+
+
+.notification_auditores {
+  position: relative;
+  display: inline-block;
+  border-radius: 1px;
+
+}
+
+.notification_auditores:hover {
+
+}
+
+.notification_auditores .badge {
+  position: absolute;
+  top: -5px;
+  right: -3px;
+  padding: 2px 6px;
+  border-radius: 50%;
+  background: #1e7799;
+  color: white;
+  font-size:10px;
+
+
+}
+
+
+
+
+.notification_auditores2 {
+  position: relative;
+  display: inline-block;
+  border-radius: 1px;
+
+}
+
+.notification_auditores2:hover {
+
+}
+
+.notification_auditores2 .badge {
+  position: absolute;
+  top: -5px;
+  right: -3px;
+  padding: 2px 6px;
+  border-radius: 50%;
+  background: #1e7799;
+  color: white;
+  font-size:10px;
+
+
+}
