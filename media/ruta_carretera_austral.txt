@@ -1,0 +1,14 @@
+Stgo->Hornopiren:13.5Hrs->1138Kms->118.195(Bencina)+32.000(Peaje)
+Hornopiren->Chaiten:5.5hrs->94900(barcaza x 3)+8000(bencina)
+Chaiten->Pto Cisnes:4hrs->42000(bencina)
+
+Pto-Cisnes->Coyhaique:3hrs o 
+Pto-Cisnes->Puerto-Tranquilo:6.3hrs->63500(bencina)
+Coyhaique->Caleta-Tortel:8hrs o 
+Puerto-Tranquilo->Caleta-Tortel:4.3hrs->40000(bencina)
+
+Caleta-Tortel->Villa-Ohiggins:3.2hrs->23100(bencina)
+
+Total:412.500(por trayecto)x2=825.000/3=275.000 o /4=206.250
+
+

@@ -1,0 +1,131 @@
+
+<header class="panel-heading">
+	<div class="panel-actions">
+    </div>
+    <input type="hidden" id="txt_compromiso" value="{{ pk }}">
+	<h2 class="panel-title">Observaciones al compromiso</h2>
+</header>
+
+
+
+<form method="post" action="" id="post-form-enviar">
+         <div id="panelbody" class="panel-body" style="overflow-y: scroll; height:350px; overflow-x: hidden;">
+			  {% csrf_token %}
+
+        <div class="container"  >
+			<div class="row">
+				<div class="col-md-6">
+					<div class="form-group"  >
+
+                         {% for Ges_Observaciones in ObjectList %}
+                                <label> {{ Ges_Observaciones.usuario_observacion.get_full_name }}</label>
+                                <br>
+                                <textarea disabled="disabled" class="form-control" style="width:95%" name="textarea" rows="6" cols="50"> {{ Ges_Observaciones.descripcion_Observacion }}</textarea>
+                                <div style="width:auto;height:auto;text-align:right;">
+                                 <label style="margin-right:30px;"> {{ Ges_Observaciones.fecha_observacion }}</label>
+                                </div>
+                         {% endfor %}
+
+                                <div class="ultima-observacion">
+
+                                </div>
+
+
+
+                    </div>
+
+
+
+
+
+				</div>
+			</div>
+		</div>
+         </div>
+
+
+
+   <div class="panel-body">
+	<div class="container"  >
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group"  >
+<!--                        <p style="color:#1e7799;">Ingrese Observación</p>-->
+
+<!--                         <textarea id="txt_observacion" name="textarea" placeholder = "Ingrese una observación, máximo 1500 caracteres."  class="md-textarea form-control " maxlength="1500" rows="5"  style="width:95%;" required="required"></textarea>-->
+<!--                         <textarea id="txt_observacion" name="textarea" placeholder = "Ingrese una observación, máximo 1500 caracteres." style="width:95%" class="md-textarea form-control " maxlength="1500" required="required"   rows="5" cols="50"> </textarea>-->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+     <div class="modal-footer">
+         {% for estado in estado_compromiso %}
+
+         {% if estado.estado_compromiso_id == 2 %} <button id="btnGuarda" class="btn btn-primary" type="submit" >Aceptar</button> {% endif %}
+
+
+         {% endfor %}
+
+        <button id="btnCerrar" class="btn btn-default" type="button" data-dismiss="modal">Cerrar</button>
+    </div>
+
+
+</form>
+
+
+
+
+
+
+<script>
+
+
+
+//////////////enviar hallazgo//////////////////////
+$( document ).ready(function() {
+
+
+
+  $("#btnGuarda").click(function(){
+
+if ($('#txt_observacion').val() == 0){
+return false;
+}
+
+     var pk = $('#txt_compromiso').val();
+
+    $.ajax({
+        type:'POST',
+        cache: false,
+        url:'{% url "ObservacionesCompromisosEnc" pk  %}',
+        data:{
+            csrfmiddlewaretoken:$('input[name=csrfmiddlewaretoken]').val(),
+            observacion:$('#txt_observacion').val(),
+            action: 'post'
+        },
+        dataType: 'json',
+        success:function(data){
+        document.getElementById("post-form-enviar").reset();
+            var html = '';
+            html += ' <label>' + data.usuario + '</label>';
+            html += '<textarea disabled="disabled" class="form-control" style="width:95%" name="textarea" rows="8" cols="50">'+ data.observacion  +'</textarea>';
+            html += '  <div style="width:auto;height:auto;text-align:right; margin-right:30px;"> <label>' + data.fecha  + '</label>'
+            html += '</div>';
+            $( html ).appendTo( ".ultima-observacion" );
+        },
+        error : function(json, xhr,errmsg,err) {
+
+		alert('error' + "post:" + xhr.responseText);
+
+    }
+    });
+    return false;
+});
+});
+
+
+</script>

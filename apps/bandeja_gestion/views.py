@@ -168,6 +168,36 @@ def ObservacionesCompromisosAuditor(request, pk):
 
     return HttpResponse(t.render(c, request ), content_type='text/html; charset=utf-8', )
 
+
+def ObservacionesCompromisosAuditorDirector(request, pk):
+    id_usuario_actual = request.user.id
+
+    id_estado_compromiso= Ges_Compromisos.objects.filter(id=pk)
+
+    Observaciones_Compromiso = Ges_Observaciones_Compromiso_Enc.objects.filter(compromiso_observacion_id=pk)
+    t = loader.get_template('bandeja_gestion/modal_observaciones_auditor_director.html')
+    c = {'ObjectList': Observaciones_Compromiso, 'pk': pk, 'estado_compromiso': id_estado_compromiso}
+
+
+    if request.method == "POST":
+        #print(request.POST)
+        data = {}
+        observacion = request.POST.get('observacion')
+
+        data['observacion'] = observacion
+        data['id_compromiso'] = pk
+        data['usuario'] = request.user.get_full_name()
+        ahora = datetime.now()
+        fecha = ahora.strftime("%d" + " de " + "%B" + " de " + "%Y" + " a las " + "%H:%M")
+        data['fecha'] = fecha
+
+        Ges_Observaciones_Compromiso_Enc.objects.create(
+            descripcion_Observacion=observacion, fecha_observacion=ahora, visto=0, usuario_observacion_id=id_usuario_actual, compromiso_observacion_id=pk,
+        )
+        return JsonResponse(data)
+
+    return HttpResponse(t.render(c, request ), content_type='text/html; charset=utf-8', )
+
 class CompromisoUpdate(SuccessMessageMixin, UpdateView ):
     model = Ges_Compromisos
     form_class = CompromisoEditFormEstado

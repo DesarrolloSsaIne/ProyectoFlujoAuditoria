@@ -3,15 +3,14 @@
 				<div class="panel-actions">
 				<a class="fa fa-times" data-dismiss="modal"></a>
 				</div>
-				<h2 class="panel-title">Actualizar Hallazgos   </h2>
+				<h2 class="panel-title">Detalle del Hallazgo</h2>
 
 	</header>
 
-			<form  method="POST" enctype="multipart/form-data"  action="" >
- {% csrf_token %}
+			<form  method="post"  action="" >
 
 				<div class="panel-body">
-
+					{% csrf_token %}
 
 					 <div class="{% if form.non_field_errors %}invalid{% endif %} mb-2">
     					  {% for error in form.non_field_errors %}
@@ -93,7 +92,14 @@
 						<div  class="form-group">
 
                             <label >Anexo</label>
-					            {{ form.document }}
+
+							<br>
+{% if hallazgo.document == '0' %}
+							<div style="font-color:gray;"><b>Hallazgo Sin Archivo Adjunto</b></div>
+		{% else %}
+							<button ><a href="{{ hallazgo.document.url }}" download="">Descargar Archivo Adjunto</a></button>
+{% endif %}
+
 
                     </div>
 
@@ -134,7 +140,7 @@
 								<span class="input-group-addon">
 									<i class="fa fa-calendar"></i>
 								</span>
-								<input id="fecha_plazo_hallazgo"  type="date" class="form-control" aria-valuetext="{{ form.plazo }} <!--">-->
+								<input id="fecha_plazo_hallazgo" disabled  type="date" class="form-control" aria-valuetext="{{ form.plazo }} <!--">-->
 							 </div>
 
 					 </div>
@@ -145,9 +151,7 @@
 
 			<div class="modal-footer">
 
-				<button class="btn btn-primary" type="submit" id="confirmar"  >Confirmar</button>
-				<button class="enviar btn btn-warning float-right" type="button">Enviar</button>
-				<button class="btn btn-default" type="button" data-dismiss="modal">Cancelar</button>
+				<button class="btn btn-default" type="button" data-dismiss="modal">Salir</button>
 			</div>
 
 				<div class="alert alert-danger" style="display:none;" id="mjeError">

@@ -1,6 +1,6 @@
 {% extends 'base/base.html' %}
 {% block title %}
-Gestionar Hallazgos
+Hallazgos Asociados a la Auditoría
 {% endblock %}
 {% block content %}
 
@@ -31,8 +31,8 @@ Gestionar Hallazgos
 
   							<button type="button" class="volver btn btn-sm btn-info"  name="button" title="Volver" data-toggle="tooltip" data-original-title="Tooltip on bottom" data-placement="top" >
       								<span class="fa fa-reply"></span></button>
-								 <button  type="button" class="create btn btn-sm btn-success"  name="button" title="Agregar Hallazgo">
-      								<span class="fa fa-plus"></span></button>
+<!--								 <button  type="button" class="create btn btn-sm btn-success"  name="button" title="Agregar Hallazgo">-->
+<!--      								<span class="fa fa-plus"></span></button>-->
 
 
 									<!--<a href="#" class="fa fa-times"></a>-->
@@ -71,19 +71,15 @@ Gestionar Hallazgos
 													<td>{{ hallazgos.id_estadoshallazgo.descripcion_estado }} </td>
 
 
-    												 <td style="width:120px;">
+    												 <td style="width:80px;">
 
-														<button  type="button" title="Actualizar Registro" class="update btn btn-sm btn-primary" data-id="{% url 'hallazgoEditar' hallazgos.id %}" >
-														<span class="fa fa-pencil"></span></button>
-														 {% if hallazgos.id_estadoshallazgo_id == 2 or hallazgos.id_estadoshallazgo_id == 1 %}
-														 <button disabled type="button" title="Eliminar Registro" class="delete btn btn-sm btn-danger"  data-id="{% url 'hallazgoEliminar' hallazgos.id %}">
-      													  <span class="fa fa-trash-o"></span></button>
-														 {% else %}
-														 <button type="button" title="Eliminar Registro" class="delete btn btn-sm btn-danger"  data-id="{% url 'hallazgoEliminar' hallazgos.id %}">
-      													  <span class="fa fa-trash-o"></span></button>{%endif%}
+														<button  type="button" title="Detalle del Hallazgo" data-toggle="tooltip" data-original-title="Tooltip on bottom" data-placement="top" class="update btn btn-sm btn-warning" data-id="{% url 'hallazgoDetalleDirector' hallazgos.id %}" >
+														<span class="fa fa-search"></span></button>
 
-														 <a type="button" title="Ver Compromisos" data-toggle="tooltip" data-original-title="Tooltip on bottom" data-placement="top"  id="" href="{% url 'CompromisoAuditorList' hallazgos.id %}"  class="btn btn-sm btn-success notification_auditores"   >
+
+														 <a type="button" title="Compromisos Asociados" data-toggle="tooltip" data-original-title="Tooltip on bottom" data-placement="top"  id="" href="{% url 'CompromisoAuditorListDirector' hallazgos.id %}" id="notification_auditores"   class="btn btn-sm btn-success notification_auditores"   >
 														<span class="fa fa-bars"></span>
+															 {% if hallazgos.count_compromisos_hallazgo == none %} <span class="badge"   >0</span> {% else %} <span class="badge"   >{{ hallazgos.count_compromisos_hallazgo }}</span> {% endif %}
 
 														  </a>
                                                     </td>
@@ -199,11 +195,10 @@ Gestionar Hallazgos
     $('#observacion_center').modal('toggle');
 });
 
-$(".volver").click(function() {
-     var url = '{% url 'AuditoriaListar'  %}';
+$( ".volver" ).click(function() {
 
-    window.location.href = url
-    return false;
+
+history.go(-1);
 });
 
 </script>

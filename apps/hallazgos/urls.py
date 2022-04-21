@@ -1,6 +1,7 @@
 from django.conf.urls import url
 from django.contrib.auth.decorators import login_required
-from apps.hallazgos.views import HallazgosList, hallazgoCreate, hallazgoDelete, hallazgoUpdate, hallazgoUpdateEstado,download_file,AuditoriasListAuditado
+from apps.hallazgos.views import HallazgosList, hallazgoCreate, hallazgoDelete, hallazgoUpdate, hallazgoUpdateEstado,\
+    download_file,AuditoriasListAuditado,HallazgosListDirector,hallazgoDetalleDirector
 
 urlpatterns = [
 
@@ -12,5 +13,8 @@ urlpatterns = [
     url(r'^hallazgoUpdateEstado/', hallazgoUpdateEstado, name='hallazgoUpdateEstado'),
     url(r'^download/(?P<path>.*)$', download_file, name='donwload'),
 
+
+    url('listarHallazgosDirector/(?P<pk>\d+)/$', login_required(HallazgosListDirector.as_view()), name='HallazgosListarDirector'),
+    url('hallazgoDetalleDirector/(?P<pk>\d+)/$', login_required(hallazgoDetalleDirector.as_view()), name='hallazgoDetalleDirector'),
 
     ]

@@ -1,0 +1,201 @@
+{% extends 'base/base.html' %}
+{% block title %}
+Listar Auditorías Institucionales
+{% endblock %}
+{% block content %}
+
+{% if messages %}
+		  {% for message in messages %}
+
+			<div style="border-radius:0;" {% if message.tags %} id="danger-alert" class="{{request.session.message_class}} fade show mb-0" role="alert" {% endif %}>
+			  {{ message }}
+			  <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+				<span aria-hidden="true">&times;</span>
+			  </button>
+			</div>
+
+		  {% endfor %}
+
+	{% endif %}
+
+
+	<section class="panel">
+							<header class="panel-heading">
+								<div class="panel-actions">
+
+
+
+
+									<!--<a href="#" class="fa fa-times"></a>-->
+								</div>
+
+
+								<h2 class="panel-title"> Áreas con Auditorías Registradas </h2>
+
+							</header>
+							<div class="panel-body">
+								<table class="table table-bordered table-striped mb-none" id="datatable-default">
+									<thead>
+										<tr>
+
+                                            <th>Área Auditada</th>
+											<th>Responsable Auditoría</th>
+
+											<th> </th>
+
+
+
+
+                                        </tr>
+									</thead>
+									<tbody>
+
+                                            {% for auditoria in group_list %}
+
+                                                <tr>
+
+
+													      <td> {{ auditoria.id_nivel }}</td>
+													<td> {{ auditoria.id_user}}</td>
+
+    												 <td style="width:90px;">
+
+														 	  <a type="button" title="Auditorías Abiertas" data-toggle="tooltip" data-original-title="Tooltip on bottom" data-placement="top"  id="notification_auditores"  class="btn btn-sm btn-success notification_auditores" href="{% url 'AuditoriaListarDirector' auditoria.id 1 %}"   >
+														<span class="fa fa-unlock"></span>
+															  {% if auditoria.count_abiertas == none %} <span class="badge"   >0</span> {% else %} <span class="badge"   >{{ auditoria.count_abiertas }}</span> {% endif %}
+														  </a>
+
+														  <a type="button" title="Auditorías Cerradas" data-toggle="tooltip" data-original-title="Tooltip on bottom" data-placement="top"  id="notification_auditores"  class="btn btn-sm btn-warning notification_auditores" href="{% url 'AuditoriaListarDirector' auditoria.id 2 %}"   >
+														<span class="fa fa-lock"></span>
+															  {% if auditoria.count_cerradas == none %} <span class="badge"   >0</span> {% else %} <span class="badge"   >{{ auditoria.count_cerradas }}</span> {% endif %}
+														  </a>
+
+                                                    </td>
+                                                </tr>
+
+                                            {% endfor %}
+
+
+									</tbody>
+								</table>
+
+							</div>
+						</section>
+
+
+
+
+<!--Cabecera del modal -->
+<div class="modal fade" tabindex="-1" role="dialog" id="modalCreate">
+  <div class="modal-dialog modal-md" role="document">
+	<div class="modal-content">
+
+    </div>
+  </div>
+</div>
+
+	<div class="modal fade" tabindex="-1" role="dialog" id="modalDetalle">
+  <div class="modal-dialog modal-xs" role="document">
+	<div class="modal-content">
+
+    </div>
+  </div>
+
+</div>
+<div class="modal fade" tabindex="-1" role="dialog" id="modalUpdate">
+  <div class="modal-dialog modal-md" role="document">
+	<div class="modal-content">
+
+    </div>
+  </div>
+</div>
+
+
+<div class="modal fade" tabindex="-1" role="dialog" id="modalDelete">
+  <div class="modal-dialog modal-xs" role="document">
+	<div class="modal-content">
+
+    </div>
+  </div>
+</div>
+<!--Fin cabecera del modal -->
+
+
+
+     <div class="modal fade" id="observacion_centerAuditoria" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+          <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+
+				<header class="panel-heading">
+				<div class="panel-actions">
+				<a class="fa fa-times" data-dismiss="modal"></a>
+				</div>
+				<h2 class="panel-title">Nombre Auditoria</h2>
+			</header>
+
+              <div class="modal-body">
+               	<textarea id="txt_obs_campo_expandAuditoria" rows="15" cols="80" class="form-control" style="width:100%;resize: none; " maxlength="5000" readonly  ></textarea>
+
+              </div>
+
+
+
+              <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+
+
+	{% block extrajs %}
+
+
+
+<script type="text/javascript">
+
+
+$(document).ready(function(){
+
+
+$('#datatable-default').on('click', '#ExpandHallazgoDescripcion', function () {
+    $('#txt_obs_campo_expandAuditoria').val($(this).parents('tr').find('td:nth-child(4)').text())
+    $('#observacion_centerAuditoria').modal('toggle');
+});
+
+
+	// JS modal crea Registro
+ 	 $(".create").modalForm(  {formURL: "{% url 'AuditoriaCrear' %}", modalID: $("#modalCreate")});
+
+
+   	 // JS modal actualiza Registro
+   $(".update").each(function () {
+   $(this).modalForm({formURL: $(this).data('id'),  modalID: $("#modalUpdate")});
+
+    });
+
+
+    // JS modal elimina Registro
+    $(".delete").each(function () {
+    $(this).modalForm({formURL: $(this).data('id'),  modalID: $("#modalDelete")});
+	});
+
+
+     // Js Muestra/Oculta Mensaje Success
+   	 $(".alert").fadeTo(2000, 500).slideUp( "slow", function() {
+     $(this).remove();
+  });
+
+});
+
+</script>
+
+
+		{% endblock %}
+
+
+
+{% endblock %}

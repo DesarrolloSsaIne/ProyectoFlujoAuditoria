@@ -61,8 +61,8 @@ LDAP_AUTH_FORMAT_USERNAME = "django_python3_ldap.utils.format_username_active_di
 
 LDAP_AUTH_ACTIVE_DIRECTORY_DOMAIN = "INE"
 #
-LDAP_AUTH_CONNECTION_USERNAME = 'jrodriguez' #|| Si le da la chiripiorca al sincronizar descomentar
-LDAP_AUTH_CONNECTION_PASSWORD = 'JR14202112-9'  #|| Si le da la chiripiorca al sincronizar descomentar
+# LDAP_AUTH_CONNECTION_USERNAME = 'jrodriguez' #|| Si le da la chiripiorca al sincronizar descomentar
+# LDAP_AUTH_CONNECTION_PASSWORD = 'JR14202112-9'  #|| Si le da la chiripiorca al sincronizar descomentar
 
 
 LOGGING = {
@@ -181,6 +181,17 @@ DATABASES = {
 #     }
 # }
 
+#
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'mysql_cymysql',
+#         'NAME': 'FLUJOAUDITORIA_PRODUCCION',
+#         'USER': 'jason',
+#         'PASSWORD': '1SUMU79S',
+#         'HOST': '10.91.163.94',
+#         'PORT': 3306,
+#     }
+# }
 
 # Password validation
 # https://docs.djangoproject.com/en/2.2/ref/settings/#auth-password-validators
@@ -226,18 +237,27 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'static_root')
 
 STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static'),]
 
-MEDIA_URL = '/media/'
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+MEDIA_URL='/media/'
+MEDIA_ROOT=os.path.join(BASE_DIR,'media')
 
+
+
+# EMAIL_USE_TLS = False
+# EMAIL_HOST = '192.168.1.235'
+# EMAIL_PORT = 25
+# # EMAIL_HOST_USER = 'capacity.planificacion@ine.cl'
+# # EMAIL_HOST_PASSWORD = '(Morande_801)'
+# EMAIL_HOST_USER = 'jmrodriguezc@ine.gob.cl'
+# EMAIL_HOST_PASSWORD = 'JR14202112-9'
+# EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+# DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
+# EMAIL_USE_SSL = False
 
 
 EMAIL_USE_TLS = False
 EMAIL_HOST = '192.168.1.235'
 EMAIL_PORT = 25
-# EMAIL_HOST_USER = 'capacity.planificacion@ine.cl'
-# EMAIL_HOST_PASSWORD = '(Morande_801)'
-EMAIL_HOST_USER = 'jmrodriguezc@ine.gob.cl'
-EMAIL_HOST_PASSWORD = 'JR14202112-9'
+
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
+DEFAULT_FROM_EMAIL = 'seguimiento.auditoria@ine.cl'
 EMAIL_USE_SSL = False

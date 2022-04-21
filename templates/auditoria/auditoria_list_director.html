@@ -1,6 +1,6 @@
 {% extends 'base/base.html' %}
 {% block title %}
-Gestionar Auditorías
+Listar Auditorías Institucionales
 {% endblock %}
 {% block content %}
 
@@ -23,10 +23,11 @@ Gestionar Auditorías
 							<header class="panel-heading">
 								<div class="panel-actions">
 
+      <button type="button" class="volver btn btn-sm btn-info"  data-toggle="tooltip" data-original-title="Tooltip on bottom" data-placement="top" name="button" title="Volver" >
+                                                                    <span class="fa fa-reply"></span></button>
 
-
-								 <button  type="button" class="create btn btn-sm btn-success"  data-toggle="tooltip" data-original-title="Tooltip on bottom" data-placement="top"  name="button" title="Agregar Auditoría">
-      								<span class="fa fa-plus"></span></button>
+<!--								 <button  type="button" class="create btn btn-sm btn-success"  data-toggle="tooltip" data-original-title="Tooltip on bottom" data-placement="top"  name="button" title="Agregar Auditoría">-->
+<!--      								<span class="fa fa-plus"></span></button>-->
 
 
 									<!--<a href="#" class="fa fa-times"></a>-->
@@ -42,7 +43,7 @@ Gestionar Auditorías
 										<tr>
                                             <th>#</th>
 											<th>Año</th>
-											<th>Código</th>
+<!--											<th>Código</th>-->
 											<th>Nombre Auditoría</th>
                                             <th>Área</th>
 											<th>Responsable</th>
@@ -64,7 +65,7 @@ Gestionar Auditorías
 
                                                     <td> {{ auditoria.id }}</td>
 													<td> {{ auditoria.anio_auditoria }}</td>
-                                                    <td> {{ auditoria.cod_auditoria }}</td>
+<!--                                                    <td> {{ auditoria.cod_auditoria }}</td>-->
 <!--													<td> {{ auditoria.descripcion_auditoria }}</td>-->
 													<td id="ExpandHallazgoDescripcion" > <p class="Mitexto" >{{ auditoria.descripcion_auditoria }}</p></td>
                                                     <td> {{ auditoria.jefatura_id.id_nivel }}</td>
@@ -79,21 +80,21 @@ Gestionar Auditorías
 
 
 
-    												 <td style="width:180px;">
-														 <button type="button" title="Actualizar Auditoría" data-toggle="tooltip" data-original-title="Tooltip on bottom" data-placement="top" class="update btn btn-sm btn-primary" data-id="{% url 'AuditoriaEditar' auditoria.id %}" >
-														<span class="fa fa-pencil"></span></button>
-														 <button type="button" title="Eliminar Auditoría" data-toggle="tooltip" data-original-title="Tooltip on bottom" data-placement="top" class="delete btn btn-sm btn-danger" data-id="{% url 'AuditoriaEliminar' auditoria.id %}">
-      													  <span class="fa fa-trash-o"></span></button>
-														  <a type="button" title="Hallazgos Asociados" data-toggle="tooltip" data-original-title="Tooltip on bottom" data-placement="top"  id="notification_auditores" href="{% url 'HallazgosListar' auditoria.id %}"  class="btn btn-sm btn-warning notification_auditores"   >
-														<span class="fa fa-search"></span>
+    												 <td style="width:120px;">
+														 <button type="button" title="Ver Detalles" data-toggle="tooltip" data-original-title="Tooltip on bottom" data-placement="top" class="update btn btn-sm btn-primary" data-id="{% url 'AuditoriaDetalleDirector' auditoria.id %}" >
+														<span class="fa fa-search"></span></button>
+<!--														 <button type="button" title="Eliminar Auditoría" data-toggle="tooltip" data-original-title="Tooltip on bottom" data-placement="top" class="delete btn btn-sm btn-danger" data-id="{% url 'AuditoriaEliminar' auditoria.id %}">-->
+<!--      													  <span class="fa fa-trash-o"></span></button>-->
+														  <a type="button" title="Hallazgos Asociados" data-toggle="tooltip" data-original-title="Tooltip on bottom" data-placement="top"  id="notification_auditores" href="{% url 'HallazgosListarDirector' auditoria.id %}"  class="btn btn-sm btn-warning notification_auditores"   >
+														<span class="fa fa-bars"></span>
 															  {% if auditoria.count_hallazgos == none %} <span class="badge"   >0</span> {% else %} <span class="badge"   >{{ auditoria.count_hallazgos }}</span> {% endif %}
 														  </a>
-														 <a type="button" title="Auditor(es) Designado(s)" data-toggle="tooltip" data-original-title="Tooltip on bottom" data-placement="top"  id="notification_auditores" href="{% url 'AuditoriaAuditorListar' auditoria.id %}"  class="btn btn-sm btn-info notification_auditores"   >
+														 <a type="button" title="Auditor(es) Designado(s)" data-toggle="tooltip" data-original-title="Tooltip on bottom" data-placement="top"  id="notification_auditores" href="{% url 'AuditoriaAuditorListarDirector' auditoria.id %}"  class="btn btn-sm btn-info notification_auditores"   >
 														<span class="fa fa-user"></span>
                                                          {% if auditoria.count_auditores == none %} <span class="badge"   >0</span> {% else %} <span class="badge"   >{{ auditoria.count_auditores }}</span> {% endif %}
                                                          </a>
-														 <a  type="button" style="width:30px; height:30px; "  class="btn btn-sm btn-success"  name="button" title="Descargar Reporte Xls" data-toggle="tooltip" data-original-title="Tooltip on bottom" data-placement="top" href="{% url 'exporta_reporte_auditoria_auditor_xls' auditoria.id %}">
-														 <span style="margin-left:-1px; " class="fa fa-file-excel-o"></span></a>
+<!--														 <a  type="button" style="width:30px; height:30px; "  class="btn btn-sm btn-success"  name="button" title="Descargar Reporte Xls" data-toggle="tooltip" data-original-title="Tooltip on bottom" data-placement="top" href="{% url 'exporta_reporte_auditoria_auditor_xls' auditoria.id %}">-->
+<!--														 <span style="margin-left:-1px; " class="fa fa-file-excel-o"></span></a>-->
                                                     </td>
                                                 </tr>
                                             {% endfor %}
@@ -183,6 +184,9 @@ Gestionar Auditorías
 
 $(document).ready(function(){
 
+$( ".volver" ).click(function() {
+  $(location).attr('href', '{% url 'AuditoriaListarAreasDirector'  %}')
+});
 
 $('#datatable-default').on('click', '#ExpandHallazgoDescripcion', function () {
     $('#txt_obs_campo_expandAuditoria').val($(this).parents('tr').find('td:nth-child(4)').text())

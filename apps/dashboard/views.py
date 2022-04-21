@@ -82,6 +82,35 @@ class InicioDashboard(TemplateView):
 
             context["GrupoDashboard"] = 'GrupoDirector'
 
+
+
+            UnidadesAsociadas = Ges_auditoria.objects.filter().values(
+                    'jefatura_id__id_nivel__descripcion_nivel').annotate(
+                    CantidadPlan=Count('id')).order_by(
+                    'jefatura_id')
+
+            auditorias = list(Ges_auditoria.objects.filter( ).values_list(
+                    'jefatura_id', flat=True).distinct().order_by(
+                    'jefatura_id')) #trae todas las jefaturas diferentes
+
+            ValAbiertas = []
+            ValCerradas = []
+
+            for i in auditorias:
+                val = Ges_auditoria.objects.filter(
+                        Q(jefatura_id=i)  & Q(estado_auditoria_id=1)).count()
+                ValAbiertas.append(val)
+
+                val = Ges_auditoria.objects.filter(
+                        Q(jefatura_id=i)  & Q(estado_auditoria_id=2)).count()
+                ValCerradas.append(val)
+
+            context["valores"] = {"ValAbiertas": ValAbiertas,
+                                      "ValCerradas": ValCerradas,
+                                      }
+
+            context["UnidadesAsociadas"] = UnidadesAsociadas
+
             return context
 
 

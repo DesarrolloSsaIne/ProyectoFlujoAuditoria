@@ -1,7 +1,8 @@
 from django.shortcuts import render
 from apps.auditoria.models import Ges_auditoria, Glo_autoria_auditor
 from apps.hallazgos.models import Ges_Hallazgo
-from apps.auditoria.forms import AuditoriaAddForm, AuditoriaUpdForm, AuditoriaAuditorAddForm
+from apps.jefaturas.models import Ges_Jefatura
+from apps.auditoria.forms import AuditoriaAddForm, AuditoriaUpdForm, AuditoriaAuditorAddForm,AuditoriaDetalleDirectorForm
 from django.views.generic import ListView, CreateView, UpdateView, DeleteView
 
 from django.contrib.messages.views import SuccessMessageMixin
@@ -9,6 +10,9 @@ from django.contrib import messages
 from django.http import HttpResponseRedirect
 from django.db.models.deletion import ProtectedError
 from django.db.models import Subquery, OuterRef, Count,F #import agregado por JR- sprint 8 - Ok
+from django.db.models import Q
+
+from django.db.models import Sum
 from django.db.models.functions import Concat
 from apps.periodos.models import Glo_Periodos
 from django.contrib.auth.models import User, Group
@@ -46,6 +50,80 @@ class AuditoriaList(ListView):
 
         return context
 
+
+class AuditoriaListDirector(ListView):
+    model = Ges_auditoria
+    template_name = 'auditoria/auditoria_list_director.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(AuditoriaListDirector, self).get_context_data(**kwargs)
+
+        if (self.kwargs['estado']=='1'):
+            lista_auditorias = Ges_auditoria.objects.filter(Q(jefatura_id=self.kwargs['pk']) & Q(estado_auditoria_id=1))
+        else:
+            lista_auditorias = Ges_auditoria.objects.filter(Q(jefatura_id=self.kwargs['pk']) & Q(estado_auditoria_id=2))
+
+        id_usuario = self.request.user.id
+        # auditarias_usuario = Glo_autoria_auditor.objects.filter(id_auditor_id = id_usuario)
+        a_list = []
+        for auditarias in lista_auditorias:
+            a_list.append(auditarias.id)
+
+
+        count_auditores = Glo_autoria_auditor.objects.values('id_auditoria_id').filter(
+            id_auditoria_id=OuterRef('pk')).annotate(
+            count_id_auditoria=Count('id'))
+
+        count_hallazgos = Ges_Hallazgo.objects.values('id_auditoria').filter(
+            id_auditoria=OuterRef('pk')).annotate(
+            count_id_auditoria=Count('id_auditoria'))
+
+        lista_auditorias = Ges_auditoria.objects.filter(id__in = a_list).annotate(
+            count_auditores=Subquery(count_auditores.values('count_id_auditoria')),
+        count_hallazgos=Subquery(count_hallazgos.values('count_id_auditoria')))
+
+        context['object_list'] = lista_auditorias
+
+        return context
+
+
+class AuditoriaListAreasDirector(ListView):
+    model = Ges_auditoria
+    template_name = 'auditoria/auditoria_list_areas_director.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(AuditoriaListAreasDirector, self).get_context_data(**kwargs)
+
+
+        lista_auditorias = Ges_auditoria.objects.all()
+
+
+        a_list = []
+        for auditarias in lista_auditorias:
+            a_list.append(auditarias.jefatura_id_id)
+
+
+        count_abiertas = Ges_auditoria.objects.values('jefatura_id').filter(
+            jefatura_id=OuterRef('pk')).annotate(
+            count_id_auditoria=Count('id', filter=Q(estado_auditoria_id=1)))
+
+        count_cerradas = Ges_auditoria.objects.values('jefatura_id').filter(
+            jefatura_id=OuterRef('pk')).annotate(
+            count_id_auditoria=Count('id', filter=Q(estado_auditoria_id=2)))
+
+
+        lista_auditorias = Ges_Jefatura.objects.filter(id__in = a_list).annotate(
+            count_abiertas=Subquery(count_abiertas.values('count_id_auditoria')), count_cerradas=Subquery(count_cerradas.values('count_id_auditoria')))
+
+
+        context['group_list'] = lista_auditorias
+
+        return context
+
+class AuditoriaDetalleDirector(SuccessMessageMixin, UpdateView ):
+    model = Ges_auditoria
+    form_class = AuditoriaDetalleDirectorForm
+    template_name = 'auditoria/auditoria_director_detalle.html'
 
 class AuditoriaDelete(SuccessMessageMixin, DeleteView ):
     model = Ges_auditoria
@@ -145,7 +223,22 @@ class AuditoriaAuditoresList(ListView):
 
         return context
 
+class AuditoriaAuditoresListDirector(ListView):
+    model = Ges_auditoria
+    template_name = 'auditoria/auditoria_auditores_list_Director.html'
 
+    def get_context_data(self,  **kwargs):
+        context = super(AuditoriaAuditoresListDirector, self).get_context_data(**kwargs)
+
+
+        lista_auditorias = Glo_autoria_auditor.objects.filter(id_auditoria_id=self.kwargs['pk'])
+
+        context['object_list'] = lista_auditorias
+
+        self.request.session['pk_auditoria'] = self.kwargs['pk']
+
+
+        return context
 
 
 class AuditoriaAuditorCreate(SuccessMessageMixin, CreateView):

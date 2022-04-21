@@ -6,7 +6,7 @@ from apps.compromisos.views import HallazgosList, ComprimisoList, CompromisoCrea
     EnviaCompromiso, hallazgoDetalleCompomiso, ComprimisoAuditorList, CompromisoValidarAuditor, \
     update_compromiso_rechaza, update_compromiso_acepta,HallazgoCreateEncargadoGestion, CompromisoDevolverEG,\
     CompromisoCreateEg,CompromisoUpdateEg,CompromisoDeleteEg,CompromisoResponsableUpdateEg, export_users_xls_auditoria_auditor, \
-    export_users_xls_auditoria_auditado, CompromisoUpdateAuditor
+    export_users_xls_auditoria_auditado, CompromisoUpdateAuditor, ComprimisoAuditorListDirector
 
 
 
@@ -36,4 +36,6 @@ urlpatterns = [
 
     path(r'ExportarReporteAuditoriaAuditor/<int:pk>', export_users_xls_auditoria_auditor, name='exporta_reporte_auditoria_auditor_xls'),
     path(r'ExportarReporteAuditoriaAuditado/<int:pk>', export_users_xls_auditoria_auditado, name='exporta_reporte_auditoria_auditado_xls'),
+
+    url('hallazgoDetalleCompromisoAuditorDirector/(?P<pk>\d+)/$', login_required(ComprimisoAuditorListDirector.as_view()), name='CompromisoAuditorListDirector'),
     ]

@@ -8,7 +8,8 @@ from apps.hallazgos.forms import HallazgoAddForm, HallazgoUpdateForm, HallazgoDe
 from apps.hallazgos.models import Ges_Hallazgo
 from apps.auditoria.models import Ges_auditoria, Glo_autoria_auditor
 from apps.jefaturas.models import Ges_Jefatura
-from apps.compromisos.models import Ges_Compromisos
+from apps.compromisos.models import Ges_Compromisos, Ges_Observaciones_Compromiso_Enc
+
 # Create your views here.
 from apps.compromisos.forms import CompromisoAddForm, CompromisoResponsableEditForm, \
     CompromisoEditForm, CompromisoEnviarRevisionForm, \
@@ -743,6 +744,36 @@ class ComprimisoAuditorList(ListView):
         context = super(ComprimisoAuditorList, self).get_context_data(**kwargs)
 
         lista_compromisos = Ges_Compromisos.objects.filter(hallazgo_id=self.kwargs['pk'])
+        hallazgo =  Ges_Hallazgo.objects.get(id=self.kwargs['pk'])
+        context['object_list'] = lista_compromisos
+        context['auditoria'] ={ 'nombre' : str(hallazgo.id_auditoria.descripcion_auditoria), 'numero' : str(hallazgo.id_auditoria.cod_auditoria) }
+
+        context['id_hallazgo'] = {'id': str(hallazgo.id_auditoria_id)}
+
+        # context = {"id_hallazgo": hallazgo.id}
+
+
+
+        self.request.session['pk_hallazgo'] = self.kwargs['pk']
+        return context
+
+
+class ComprimisoAuditorListDirector(ListView):
+    model = Ges_Compromisos
+    template_name = 'compromisos/hallazgo_compromiso_auditor_list_director.html'
+
+    def get_context_data(self,  **kwargs):
+        context = super(ComprimisoAuditorListDirector, self).get_context_data(**kwargs)
+
+
+        count_observaciones_compromiso = Ges_Observaciones_Compromiso_Enc.objects.values('compromiso_observacion_id').filter(
+            compromiso_observacion_id=OuterRef('pk')).annotate(
+            count_observaciones_compromiso=Count('id'))
+
+        lista_compromisos = Ges_Compromisos.objects.filter(hallazgo_id=self.kwargs['pk']).annotate(
+            count_observaciones=Subquery(count_observaciones_compromiso.values('count_observaciones_compromiso')))
+
+
         hallazgo =  Ges_Hallazgo.objects.get(id=self.kwargs['pk'])
         context['object_list'] = lista_compromisos
         context['auditoria'] ={ 'nombre' : str(hallazgo.id_auditoria.descripcion_auditoria), 'numero' : str(hallazgo.id_auditoria.cod_auditoria) }

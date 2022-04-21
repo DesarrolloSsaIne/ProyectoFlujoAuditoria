@@ -2,22 +2,24 @@ import mimetypes
 import os
 from django.conf import settings
 from django.shortcuts import render
-from django.views.generic import ListView, CreateView, UpdateView, DeleteView
+from django.views.generic import ListView, CreateView, UpdateView, DeleteView, DetailView
 from django.contrib.messages.views import SuccessMessageMixin
 from django.contrib import messages
 from django.http import HttpResponseRedirect, HttpResponse
 from django.db.models.deletion import ProtectedError
 from apps.compromisos.models import Ges_Compromisos
-
+from apps.estados_hallazgo.models import Glo_EstadosHallazgo
 from apps.hallazgos.models import Ges_Hallazgo
 from apps.auditoria.models import Ges_auditoria
 from apps.jefaturas.models import Ges_Jefatura
 from apps.jefaturas.models import Ges_Jefatura
 # Create your views here.
-from apps.hallazgos.forms import HallazgoAddForm, HallazgoUpdateForm
+from apps.hallazgos.forms import HallazgoAddForm, HallazgoUpdateForm,HallazgoDetalleDirectorForm
 from django.http import HttpResponseRedirect, JsonResponse
 from django.core.mail import EmailMessage,send_mass_mail
 from django.db.models import Subquery, OuterRef, Count
+from django.db.models import Q
+from datetime import datetime
 IMAGE_FILE_TYPES = ['bat', 'exe', 'rar' ]
 SIZE = 10485760
 
@@ -68,6 +70,87 @@ class HallazgosList(ListView):
 
         self.request.session['pk_auditoria'] = self.kwargs['pk']
         return context
+
+
+class HallazgosListDirector(ListView):
+    model = Ges_Hallazgo
+    template_name = 'hallazgos/hallazgos_list_director.html'
+
+    def get_context_data(self,  **kwargs):
+        context = super(HallazgosListDirector, self).get_context_data(**kwargs)
+
+        count_abiertas = Ges_Compromisos.objects.values('hallazgo_id').filter(
+            hallazgo_id=OuterRef('pk')).annotate(
+            count_compomisos=Count('id'))
+
+        lista_hallazgos = Ges_Hallazgo.objects.filter(id_auditoria_id=self.kwargs['pk']).annotate(
+            count_compromisos_hallazgo=Subquery(count_abiertas.values('count_compomisos')))
+
+        #lista_hallazgos = Ges_Hallazgo.objects.filter(id_auditoria_id=self.kwargs['pk'])
+
+        auditoria = Ges_auditoria.objects.get(id=self.kwargs['pk'])
+        context['object_list'] = lista_hallazgos
+        context['auditoria'] ={ 'nombre' : str(auditoria.descripcion_auditoria), 'numero' : str(auditoria.cod_auditoria) }
+
+        self.request.session['pk_auditoria'] = self.kwargs['pk']
+        return context
+
+
+class hallazgoDetalleDirector(SuccessMessageMixin, UpdateView ):
+    model = Ges_Hallazgo
+    form_class = HallazgoDetalleDirectorForm
+    template_name = 'hallazgos/hallazgo_detalle_director.html'
+
+    def get_context_data(self,  **kwargs):
+        context = super(hallazgoDetalleDirector, self).get_context_data(**kwargs)
+
+        try:
+            hallazgo = Ges_Hallazgo.objects.get(id=self.kwargs['pk'])
+        except Ges_Hallazgo.DoesNotExist:
+            return None
+
+        try:
+            hallazgo = Ges_Hallazgo.objects.get(id=self.kwargs['pk'])
+        except Ges_Hallazgo.DoesNotExist:
+            return None
+
+        if hallazgo.document:
+            documento= hallazgo.document
+        else:
+            documento='0'
+
+        context['hallazgo'] = {'id': hallazgo.id,'document': documento,}
+
+        return context
+
+
+# class hallazgoDetalleDirector(SuccessMessageMixin, DetailView ):
+#     model = Ges_Hallazgo
+#     template_name = 'hallazgos/hallazgo_detalle_director.html'
+#
+#     def get_context_data(self,  **kwargs):
+#         context = super(hallazgoDetalleDirector, self).get_context_data(**kwargs)
+#
+#         try:
+#             hallazgo = Ges_Hallazgo.objects.get(id=self.kwargs['pk'])
+#         except Ges_Hallazgo.DoesNotExist:
+#             return None
+#
+#         try:
+#             hallazgo = Ges_Hallazgo.objects.get(id=self.kwargs['pk'])
+#         except Ges_Hallazgo.DoesNotExist:
+#             return None
+#
+#         if hallazgo.document:
+#             documento= hallazgo.document
+#         else:
+#             documento='0'
+#
+#         context['hallazgo'] = {'id': hallazgo.id,'document': documento,}
+#
+#         return context
+
+
 
 class hallazgoCreate(SuccessMessageMixin, CreateView ):
     form_class = HallazgoAddForm
@@ -152,7 +235,7 @@ class hallazgoUpdate(SuccessMessageMixin, UpdateView ):
         except Ges_Hallazgo.DoesNotExist:
             return None
 
-        context['hallazgo'] = {'id': hallazgo.id,'document': hallazgo.document,}
+        context['hallazgo'] = {'id': hallazgo.id}
 
         return context
 
@@ -161,7 +244,7 @@ class hallazgoUpdate(SuccessMessageMixin, UpdateView ):
         self.object = self.get_object
         id = kwargs['pk']
         id_hallazgo = self.model.objects.get(id=id)
-        form = self.form_class(request.POST, instance=id_hallazgo)
+        form = self.form_class(request.POST,  request.FILES ,instance=id_hallazgo)
 
         if form.is_valid():
             form.save()
@@ -184,45 +267,84 @@ def hallazgoUpdateEstado(request):
         estado_hallazgo = request.POST.get('estado_hallazgo')
 
         #buscar el modelo a actualizar
-        hallazgo =  Ges_Hallazgo.objects.get(id=id_hallazgo)
+        hallazgo = Ges_Hallazgo.objects.get(id=id_hallazgo)
         hallazgo.id_estadoshallazgo_id = int(estado_hallazgo)
         auditado = Ges_Jefatura.objects.get(id = hallazgo.jefatura_id_id)
 
+
+        id_estadohallazgo = Glo_EstadosHallazgo.objects.get(id=1)
+
+
+        # hallazgo.save()
+
         try:
-          hallazgo.save()
-          response_mail =EnviarCorreoInicioHallazgo(auditado.id_user.email, hallazgo.id_auditoria.cod_auditoria,
+
+            Ges_Hallazgo.objects.filter(id=id_hallazgo).update(id_estadoshallazgo=id_estadohallazgo.id)
+
+
+        except:
+          response_data['error'] = '3'
+
+
+
+        try:
+
+            EnviarCorreoInicioHallazgo(auditado.id_user.email, hallazgo.id_auditoria.cod_auditoria,
                                          hallazgo.id_auditoria.descripcion_auditoria)
 
+            response_data['error'] = '1'
 
-          if response_mail == False:
-              response_mail = 'Error al enviar el correo de notificación '
-              response_data['error'] = 'La actividad fue validada/enviada correctamente. ' + response_mail
-          response_data['error'] = 'La actividad fue validada/enviada correctamente. '
+
+
         except:
-          response_data['error'] = 'Error al intentar validar la actividad, intente nuevamente o comuniquese con el administrador.'
+            response_data['error'] = '2'
+
+
+
+
+          # if response_mail == False:
+          #
+          #     response_data['error'] = '2'
+          # response_data['error'] = '1'
+
+
         return JsonResponse(response_data)
 
-    return render(request, '/hallazgos/listarHallazgos/' + str(id_hallazgo), {'success': 'true'})
+
+
+
+    return render(request, '/hallazgos/listarHallazgos/' + str(id_hallazgo), {'messages': 'true'})
 
 
 
 def EnviarCorreoInicioHallazgo(auditores_emails, cod_auditoria, descripcion_auditoria):
     # ahora = datetime.now()
     # fecha = ahora.strftime("%d" + "/" + "%m" + "/" + "%Y" + " a las " + "%H:%M")
+    # cod_auditoria = str(cod_auditoria)
+    # descripcion_auditoria = str(descripcion_auditoria)
+    # idcorreoJefatura=[auditores_emails]
+    #
+    # subject = 'Asignación Hallazgo de Auditoría'
+    # messageHtml = '<b>Estimado/a Usuario/a</b>: <br><br> En el marco de la auditoria en curso <b>'+ cod_auditoria +'</b> relacionada a <b>'+ descripcion_auditoria +'</b> realizada por el Depto de Auditoria Institucional, se requiere su ingreso al Sistema de Auditoria Institucional, para proceder al ingreso de sus compromisos de acuerdo a cada hallazgo levantado.  El plazo para ingresar la información requerida, es de 5 días hábiles a partir de la recepción de éste correo. <b> <br> El link de acceso es:  <a href="http://10.91.160.63:81/accounts/login/"> Sistema Auditoría'
+    # email = EmailMessage(subject, messageHtml,from_email=settings.EMAIL_HOST_USER  ,to=idcorreoJefatura)
+    # email.content_subtype='html'
+    # try:
+    #     email.send()
+    #     return True
+    # except:
+    #     return False
+
+    # ahora = datetime.now()
+    # fecha = ahora.strftime("%d" + "/" + "%m" + "/" + "%Y" + " a las " + "%H:%M")
     cod_auditoria = str(cod_auditoria)
-    descripcion_auditoria = str(descripcion_auditoria)
     idcorreoJefatura=[auditores_emails]
 
     subject = 'Asignación Hallazgo de Auditoría'
     messageHtml = '<b>Estimado/a Usuario/a</b>: <br><br> En el marco de la auditoria en curso <b>'+ cod_auditoria +'</b> relacionada a <b>'+ descripcion_auditoria +'</b> realizada por el Depto de Auditoria Institucional, se requiere su ingreso al Sistema de Auditoria Institucional, para proceder al ingreso de sus compromisos de acuerdo a cada hallazgo levantado.  El plazo para ingresar la información requerida, es de 5 días hábiles a partir de la recepción de éste correo. <b> <br> El link de acceso es:  <a href="http://10.91.160.63:81/accounts/login/"> Sistema Auditoría'
-    email = EmailMessage(subject, messageHtml,from_email=settings.EMAIL_HOST_USER  ,to=idcorreoJefatura)
-    email.content_subtype='html'
-    try:
-        email.send()
-        return True
-    except:
-        return False
 
+    email = EmailMessage(subject, messageHtml ,to=idcorreoJefatura)
+    email.content_subtype='html'
+    email.send()
 
 
 def download_file(request, *args, **kwargs):

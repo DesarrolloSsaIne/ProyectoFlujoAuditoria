@@ -1,7 +1,7 @@
 from django.conf.urls import url
 from django.contrib.auth.decorators import login_required
 from apps.bandeja_gestion.views import HallazgosList, ComprimisoList, CompromisoUpdate, ObservacionesCompromisosEnc, \
-    ObservacionesCompromisosAuditor, ObservacionesCompromisosAuditado, ObservacionesCompromisosObservador
+    ObservacionesCompromisosAuditor, ObservacionesCompromisosAuditado, ObservacionesCompromisosObservador, ObservacionesCompromisosAuditorDirector
 from django.urls import path
 
 urlpatterns = [
@@ -18,5 +18,8 @@ urlpatterns = [
 
     path('ObservacionesCompromisosObservador/<int:pk>', ObservacionesCompromisosObservador,
              name="ObservacionesCompromisosObservador"),
+
+    path('ObservacionesCompromisosAuditorDirector/<int:pk>', ObservacionesCompromisosAuditorDirector,
+         name="ObservacionesCompromisosAuditorDirector"),
 
     ]
