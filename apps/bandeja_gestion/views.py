@@ -233,7 +233,7 @@ class CompromisoUpdate(SuccessMessageMixin, UpdateView ):
             if respuesta_mail == False:
                 request.session['message_class'] = "alert alert-warning"
                 respuesta_mail = 'Ops! ocurrio un error al enviar el correo de notificación'
-            messages.success(self.request, "El compromiso fue enviado a validación del Responsable de Área! " + respuesta_mail)
+            messages.success(self.request, "El compromiso fue enviado a validación del Responsable de Área! ")
             return HttpResponseRedirect('/bandeja_gestion/listarCompromisoEnc/'+ str(self.request.session['pk_hallazgo']))
         else:
             request.session['message_class'] = "alert alert-danger"
@@ -257,7 +257,7 @@ def EnviarCorreoInicioSeguimiento(auditores_emails, cod_auditoria, descripcion_a
     idcorreoJefatura=[auditores_emails]
 
     subject = 'Revisión Compromiso de Auditoría'
-    messageHtml = '<b>Estimado/a</b>: <br><br> En el marco de la auditoria en curso <b>'+ cod_auditoria +'</b> <b>'+ descripcion_auditoria +'</b>, se requiere su ingreso al Sistema de Auditoria Institucional, para proceder a la revisión del/los compromisos ingresados por el Encargado de Gestionar Compromiso.. <b> <br> El link de acceso es:  <a href="http://10.91.160.63:81/accounts/login/"> Sistema Auditoría'
+    messageHtml = '<b>Estimado/a</b>: <br><br> En el marco de la auditoria en curso <b>'+ cod_auditoria +'</b> <b>'+ descripcion_auditoria +'</b>, se requiere su ingreso al Sistema de Auditoria Institucional, para proceder a la revisión del/los compromisos ingresados por el Encargado de Gestionar Compromiso.. <b> <br> El link de acceso es:  <a href="http://seguimientoauditoria.ine.cl:8008/accounts/login/"> Sistema Auditoría'
     email = EmailMessage(subject, messageHtml ,to=idcorreoJefatura)
     email.content_subtype='html'
     try:

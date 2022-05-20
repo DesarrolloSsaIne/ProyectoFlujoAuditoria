@@ -49,8 +49,8 @@ Gestionar Hallazgos
 
 											<th>ID</th>
                                             <th>#</th>
-                                            <th>Proceso</th>
-                                            <th>Descripción</th>
+<!--                                            <th>Proceso</th>-->
+                                            <th style="width:280px;">Descripción Hallazgo</th>
                                             <th>Área</th>
 											<th>Responsable</th>
 											<th>Estado</th>
@@ -64,7 +64,7 @@ Gestionar Hallazgos
 
                                                     <td>{{ hallazgos.id }} </td>
 													<td>{{ hallazgos.numero_hallazgo }} </td>
-                                                    <td>{{ hallazgos.proceso }} </td>
+<!--                                                    <td>{{ hallazgos.proceso }} </td>-->
 													<td id="ExpandHallazgo" class="Mitexto"  style="height:80px; width:100%; border-bottom:1px; border-left:0px; border-right:0px;  padding-top:-5px;">{{ hallazgos.descripcion_hallazgo }} </td>
 													<td>{{ hallazgos.jefatura_id.id_nivel }} </td>
 													<td>{{ hallazgos.jefatura_id.id_user }} </td>

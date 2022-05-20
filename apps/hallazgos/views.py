@@ -235,7 +235,7 @@ class hallazgoUpdate(SuccessMessageMixin, UpdateView ):
         except Ges_Hallazgo.DoesNotExist:
             return None
 
-        context['hallazgo'] = {'id': hallazgo.id}
+        context['hallazgo'] = {'id': hallazgo.id, 'estado_hallazgo':hallazgo.id_estadoshallazgo_id}
 
         return context
 
@@ -340,7 +340,7 @@ def EnviarCorreoInicioHallazgo(auditores_emails, cod_auditoria, descripcion_audi
     idcorreoJefatura=[auditores_emails]
 
     subject = 'Asignación Hallazgo de Auditoría'
-    messageHtml = '<b>Estimado/a Usuario/a</b>: <br><br> En el marco de la auditoria en curso <b>'+ cod_auditoria +'</b> relacionada a <b>'+ descripcion_auditoria +'</b> realizada por el Depto de Auditoria Institucional, se requiere su ingreso al Sistema de Auditoria Institucional, para proceder al ingreso de sus compromisos de acuerdo a cada hallazgo levantado.  El plazo para ingresar la información requerida, es de 5 días hábiles a partir de la recepción de éste correo. <b> <br> El link de acceso es:  <a href="http://10.91.160.63:81/accounts/login/"> Sistema Auditoría'
+    messageHtml = '<b>Estimado/a Usuario/a</b>: <br><br> En el marco de la auditoria en curso <b>'+ cod_auditoria +'</b> relacionada a <b>'+ descripcion_auditoria +'</b> realizada por el Depto de Auditoria Institucional, se requiere su ingreso al Sistema de Auditoria Institucional, para proceder al ingreso de sus compromisos de acuerdo a cada hallazgo levantado.  El plazo para ingresar la información requerida, es de 5 días hábiles a partir de la recepción de éste correo. <b> <br> El link de acceso es:  <a href="http://seguimientoauditoria.ine.cl:8008/accounts/login/"> Sistema Auditoría'
 
     email = EmailMessage(subject, messageHtml ,to=idcorreoJefatura)
     email.content_subtype='html'
@@ -365,12 +365,12 @@ def download_file(request, *args, **kwargs):
     # Return the response value
     return response
 
-def download_file(request,  **kwargs):
-    path = kwargs['path']
-    BASE_DIR = settings.BASE_DIR
-    file_path = os.path.join(BASE_DIR + '\documents\compromisos', path)
-    with open(file_path, 'rb') as fh:
-        response = HttpResponse(fh.read(), content_type="application/force-download")
-        response['Content-Disposition'] = 'inline; filename=' + os.path.basename(file_path)
-        return response
+# def download_file(request,  **kwargs):
+#     path = kwargs['path']
+#     BASE_DIR = settings.BASE_DIR
+#     file_path = os.path.join(BASE_DIR + '\documents\compromisos', path)
+#     with open(file_path, 'rb') as fh:
+#         response = HttpResponse(fh.read(), content_type="application/force-download")
+#         response['Content-Disposition'] = 'inline; filename=' + os.path.basename(file_path)
+#         return response
 

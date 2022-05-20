@@ -303,6 +303,7 @@ $(document).on('submit', '#post-form',function(e){
             id_compromiso: $('#id_compromiso').val(),
             comentario_auditor:comentario_auditor,
             estado_aceptado:4,
+            estado_hallazgo_aceptado:6,
             action: 'post'
         },
         success:function(json){

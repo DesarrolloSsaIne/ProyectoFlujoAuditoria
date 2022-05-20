@@ -138,32 +138,41 @@ $("#download_por_actividad_detalle").click(function(){
 
 {% if GrupoDashboard == 'GrupoDirector' %}
 
-
-
-<div class="col-md-6" >
+<div class="col-md-4" >
 <section class="panel">
 
-<div class="panel-body" style="background-color: #0088cc; color: white; height:35px;">
+<div class="panel-body" style="background-color: #106e7d; color: white; height:80px;">
 
 
-<h5 style=" text-align:left; margin-top:-5px;">Auditorías Abiertas: {{ total_auditorias.abiertas}}</h5>
-
+<h5 style=" text-align:center; font-size:16px; margin-top:-5px;">Auditorías Totales </h5>
+<h2 style="text-align:center; font-size:35px; margin-top:-5px;">{{ total_auditorias.abiertas|add:total_auditorias.cerradas}}</h2>
 </div>
 </section>
 </div>
 
-<div class="col-md-6">
+<div class="col-md-4" >
 <section class="panel">
 
-<div class="panel-body" style="background-color: #0088cc; color: white; height:35px;">
-
-<h5 style=" text-align:left; margin-top:-5px;">Auditorías Cerradas: {{total_auditorias.cerradas}} </h5>
+<div class="panel-body" style="background-color: #28a745; color: white; height:80px;">
 
 
+<h5 style=" text-align:center; font-size:16px; margin-top:-5px;">Auditorías Abiertas </h5>
+<h2 style="text-align:center; font-size:35px; margin-top:-5px;">{{ total_auditorias.abiertas}}</h2>
 </div>
 </section>
 </div>
 
+<div class="col-md-4" >
+<section class="panel">
+
+<div class="panel-body" style="background-color: #5e5b54; color: white; height:80px;">
+
+
+<h5 style=" text-align:center; font-size:16px; margin-top:-5px;">Auditorías Cerradas </h5>
+<h2 style="text-align:center; font-size:35px; margin-top:-5px;">{{ total_auditorias.cerradas}}</h2>
+</div>
+</section>
+</div>
 
 
 <div class="col-md-12">

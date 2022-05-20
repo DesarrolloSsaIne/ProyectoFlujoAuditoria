@@ -83,8 +83,8 @@ Gestionar Auditorías
 <!--														<span class="fa fa-pencil"></span></button>-->
 <!--														 <button type="button" title="Eliminar Auditoría" data-toggle="tooltip" data-original-title="Tooltip on bottom" data-placement="top" class="delete btn btn-sm btn-danger" data-id="{% url 'AuditoriaEliminar' auditoria.id %}">-->
 <!--      													  <span class="fa fa-trash-o"></span></button>-->
-														  <a type="button" title="Hallazgos Asociados" data-toggle="tooltip" data-original-title="Tooltip on bottom" data-placement="top"  id="notification_auditores" href="{% url 'listarHallazgoBandeja' auditoria.id %}"  class="btn btn-sm btn-success notification_auditores"   >
-														<span class="fa fa-bars"></span>
+														  <a type="button" title="Hallazgos Asociados" data-toggle="tooltip" data-original-title="Tooltip on bottom" data-placement="top"  id="notification_auditores" href="{% url 'listarHallazgoBandeja' auditoria.id %}"  class="btn btn-sm btn-warning notification_auditores"   >
+														<span class="fa fa-search"></span>
 															  {% if auditoria.count_hallazgos == none %} <span class="badge"   >0</span> {% else %} <span class="badge"   >{{ auditoria.count_hallazgos }}</span> {% endif %}
 														  </a>
 <!--														 <a type="button" title="Auditor(es) Designado(s)" data-toggle="tooltip" data-original-title="Tooltip on bottom" data-placement="top"  id="notification_auditores" href="{% url 'AuditoriaAuditorListar' auditoria.id %}"  class="btn btn-sm btn-info notification_auditores"   >-->

@@ -69,7 +69,7 @@ Compromiso Asociado
                                                     <td> {% if compromiso.medio_verificacion  == none %}   {%else%} {{ compromiso.medio_verificacion }} {%endif%}</td>
 
                                                     <td style="width:110px;"> <span style='display: none;'>{{compromiso.plazo_implementacion|date:"Ymd"}}</span> {{ compromiso.plazo_implementacion|date:"d-m-Y"}}</td>
-                                                    <td> {{ compromiso.responsable_hallazgo.id_nivel }}</td>
+                                                    <td> {{ compromiso.responsable_hallazgo }}</td>
 													<td> {{ compromiso.cargo_responsable_id.descripcion_cargo}}</td>
 													<td id="ExpandHallazgo" class="Mitexto"  style="height:80px; width:100%; border-bottom:1px; border-left:0px; border-right:0px;  padding-top:-5px;"  > {{ compromiso.hallazgo_id }}</td>
                                                     <td> {{ compromiso.estado_compromiso.descripcion_estado_compromiso }} </td>

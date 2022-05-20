@@ -32,7 +32,7 @@ Compromiso Asociado
 								 <button disabled type="button" class="create btn btn-sm btn-success"  data-toggle="tooltip" data-original-title="Tooltip on bottom" data-placement="top"  name="button" title="Agregar Compromiso">
       								<span class="fa fa-plus"></span></button>
                                     {% else %}
-                                    	 <button  type="button" class="create btn btn-sm btn-success"  data-toggle="tooltip" data-original-title="Tooltip on bottom" data-placement="top"  name="button" title="Agregar Compromiso">
+                                    	 <button {% if hallazgo.estado_hallazgo == 3 %}disabled {% endif %}  type="button" class="create btn btn-sm btn-success"  data-toggle="tooltip" data-original-title="Tooltip on bottom" data-placement="top"  name="button" title="Agregar Compromiso">
       								<span class="fa fa-plus"></span></button>
 
                                      {% endif %}

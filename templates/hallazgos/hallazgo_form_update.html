@@ -145,8 +145,10 @@
 
 			<div class="modal-footer">
 
+
+
 				<button class="btn btn-primary" type="submit" id="confirmar"  >Confirmar</button>
-				<button class="enviar btn btn-warning float-right" type="button">Enviar</button>
+				<button class="enviar btn btn-warning float-right" {%if hallazgo.estado_hallazgo != None %} disabled {%endif%} type="button">Enviar</button>
 				<button class="btn btn-default" type="button" data-dismiss="modal">Cancelar</button>
 			</div>
 

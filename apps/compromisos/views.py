@@ -56,7 +56,7 @@ class ComprimisoList(ListView):
         hallazgo =  Ges_Hallazgo.objects.get(id=self.kwargs['pk'])
         context['object_list'] = lista_compromisos
         context['auditoria'] ={ 'nombre' : str(hallazgo.id_auditoria.descripcion_auditoria), 'numero' : str(hallazgo.id_auditoria.cod_auditoria) }
-        context['hallazgo'] = {'id':hallazgo.id_auditoria_id}
+        context['hallazgo'] = {'id':hallazgo.id_auditoria_id, 'estado_hallazgo':hallazgo.id_estadoshallazgo_id}
         self.request.session['pk_hallazgo'] = self.kwargs['pk']
         return context
 
@@ -360,9 +360,9 @@ class CompromisoValidarAuditor(SuccessMessageMixin, UpdateView ):
             return None
 
 
-        context['compromisos'] = {'id':str(compromiso.id)  ,
+        context['compromisos'] = {'id':str(compromiso.id) }
 
-                             }
+
 
 
         return context
@@ -645,6 +645,7 @@ def update_compromiso_acepta(request):
         id_compromiso = request.POST.get('id_compromiso')
         comentario_auditor = request.POST.get('comentario_auditor')
         estado_aceptado = request.POST.get('estado_aceptado')
+        estado_hallazgo_aceptado= request.POST.get('estado_hallazgo_aceptado')
 
 
         #buscar el modelo a actualizar
@@ -653,9 +654,18 @@ def update_compromiso_acepta(request):
         compromiso.estado_compromiso_id = estado_aceptado
 
 
+
+
+
+
+
         compromiso_obj = Ges_Compromisos.objects.get(id=id_compromiso)
 
+
+
         hallazgo = Ges_Hallazgo.objects.get(id=compromiso_obj.hallazgo_id_id)
+
+
 
         id_auditoria= hallazgo.id_auditoria
 
@@ -668,8 +678,13 @@ def update_compromiso_acepta(request):
 
 
 
-
+          #actualiza el estado del compromiso a "Validado por Auditor"
           compromiso.save()
+          #actualiza el estado del hallazgo a "Validado por Auditor"
+          Ges_Hallazgo.objects.filter(id=compromiso.hallazgo_id_id).update(id_estadoshallazgo_id=estado_hallazgo_aceptado)
+
+
+
 
           EnviarCorreoValidaCompromiso(jefatura_emails, id_auditoria.cod_auditoria,
                                         id_auditoria.descripcion_auditoria)
@@ -694,7 +709,7 @@ def EnviarCorreoInicioSeguimiento(auditores_emails, cod_auditoria, descripcion_a
 
 
     subject = 'Revisión Compromiso de Auditoría'
-    messageHtml = '<b>Estimado/a Auditor/a</b>: <br><br> En el marco de la auditoria en curso <b>'+ cod_auditoria +'</b> <b>'+ descripcion_auditoria +'</b>, se requiere su ingreso al Sistema de Auditoria Institucional, para proceder a la revisión del/los compromisos ingresados por la contraparte. <b> <br> El link de acceso es:  <a href="http://10.91.160.63:81/accounts/login/"> Sistema Auditoría </a> </b> <br> <br>Saludos cordiales, <br>Sistema de Auditoria. <br><p style="font-size:12px;color:red;">correo generado automaticamente favor no responder.'
+    messageHtml = '<b>Estimado/a Auditor/a</b>: <br><br> En el marco de la auditoria en curso <b>'+ cod_auditoria +'</b> <b>'+ descripcion_auditoria +'</b>, se requiere su ingreso al Sistema de Auditoria Institucional, para proceder a la revisión del/los compromisos ingresados por la contraparte. <b> <br> El link de acceso es:  <a href="http://seguimientoauditoria.ine.cl:8008/accounts/login/"> Sistema Auditoría </a> </b> <br> <br>Saludos cordiales, <br>Sistema de Auditoria. <br><p style="font-size:12px;color:red;">correo generado automaticamente favor no responder.'
 
     email = EmailMessage(subject, messageHtml ,to=idcorreoJefatura)
     email.content_subtype='html'
@@ -713,7 +728,7 @@ def EnviarCorreoValidaCompromiso(responsable_hallazgo, cod_auditoria, descripcio
 
 
     subject = 'Revisión Compromiso de Auditoría'
-    messageHtml = '<b>Estimado/a</b>: <br><br> En el marco de la auditoria en curso <b>'+ cod_auditoria +'</b> <b>'+ descripcion_auditoria +'</b>, realizada por el Depto de Auditoria Institucional, se informa que su compromiso se encuentra validado. <b> <br> El link de acceso es:  <a href="http://10.91.160.63:81/accounts/login/"> Sistema Auditoría </a> </b><br><br> <br>Agradeciendo desde ya su gestión y participación <br>Saludos cordiales, <br>Depto de Auditoria Institucional <br><p style="font-size:12px;color:red;">correo generado automaticamente favor no responder.'
+    messageHtml = '<b>Estimado/a</b>: <br><br> En el marco de la auditoria en curso <b>'+ cod_auditoria +'</b> <b>'+ descripcion_auditoria +'</b>, realizada por el Depto de Auditoria Institucional, se informa que su compromiso se encuentra validado. <b> <br> El link de acceso es:  <a href="http://seguimientoauditoria.ine.cl:8008/accounts/login/"> Sistema Auditoría </a> </b><br><br> <br>Agradeciendo desde ya su gestión y participación <br>Saludos cordiales, <br>Depto de Auditoria Institucional <br><p style="font-size:12px;color:red;">correo generado automaticamente favor no responder.'
 
     email = EmailMessage(subject, messageHtml ,to=idcorreoJefatura)
     email.content_subtype='html'
@@ -730,7 +745,7 @@ def EnviarCorreoRechazaCompromiso(responsable_hallazgo, cod_auditoria, descripci
 
 
     subject = 'Revisión Compromiso de Auditoría'
-    messageHtml = '<b>Estimado/a</b>: <br><br> En el marco de la auditoria en curso <b>'+ cod_auditoria +'</b> <b>'+ descripcion_auditoria +'</b>, realizada por el Depto de Auditoria Institucional,  se informa que su compromiso ha sido observado, por lo cual deberá ingresar a sistema y proceder según corresponda. <b> <br> El link de acceso es:  <a href="http://10.91.160.63:81/accounts/login/"> Sistema Auditoría </a> </b><br><br> <br>Agradeciendo desde ya su gestión y participación <br>Saludos cordiales, <br>Depto de Auditoria Institucional <br><p style="font-size:12px;color:red;">correo generado automaticamente favor no responder.'
+    messageHtml = '<b>Estimado/a</b>: <br><br> En el marco de la auditoria en curso <b>'+ cod_auditoria +'</b> <b>'+ descripcion_auditoria +'</b>, realizada por el Depto de Auditoria Institucional,  se informa que su compromiso ha sido observado, por lo cual deberá ingresar a sistema y proceder según corresponda. <b> <br> El link de acceso es:  <a href="http://seguimientoauditoria.ine.cl:8008/accounts/login/ "> Sistema Auditoría </a> </b><br><br> <br>Agradeciendo desde ya su gestión y participación <br>Saludos cordiales, <br>Depto de Auditoria Institucional <br><p style="font-size:12px;color:red;">correo generado automaticamente favor no responder.'
 
     email = EmailMessage(subject, messageHtml ,to=idcorreoJefatura)
     email.content_subtype='html'
