@@ -251,6 +251,7 @@ $(document).on('submit', '#post-form-rechaza',function(e){
             id_compromiso: $('#id_compromiso').val(),
             comentario_auditor:comentario_auditor,
             estado_rechazado:3,
+            estado_hallazgo_rechazo:7,
             action: 'post'
         },
         success:function(json){

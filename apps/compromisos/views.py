@@ -35,7 +35,7 @@ class HallazgosList(ListView):
 
         id_usuario = self.request.user.id
         id_jefatura = Ges_Jefatura.objects.get(id_user_id = id_usuario)
-        lista_hallazgos = Ges_Hallazgo.objects.filter(Q(id_auditoria_id = self.kwargs['pk'] ) & Q (id_estadoshallazgo_id__in =[ 1,2,3,4,5]))
+        lista_hallazgos = Ges_Hallazgo.objects.filter(Q(id_auditoria_id = self.kwargs['pk'] ) & Q(id_estadoshallazgo_id__in =[ 1,2,3,4,5]))
 
 
         context['object_list'] = lista_hallazgos
@@ -602,6 +602,7 @@ def update_compromiso_rechaza(request):
         id_compromiso = request.POST.get('id_compromiso')
         comentario_auditor = request.POST.get('comentario_auditor')
         estado_rechazado = request.POST.get('estado_rechazado')
+        estado_hallazgo_rechazo = request.POST.get('estado_hallazgo_rechazo')
 
 
         #buscar el modelo a actualizar
@@ -621,6 +622,7 @@ def update_compromiso_rechaza(request):
         #
         try:
           compromiso.save()
+          Ges_Hallazgo.objects.filter(id=compromiso.hallazgo_id_id).update(id_estadoshallazgo_id=estado_hallazgo_rechazo)
 
           EnviarCorreoRechazaCompromiso(jefatura_emails, id_auditoria.cod_auditoria,
                                        id_auditoria.descripcion_auditoria)

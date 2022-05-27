@@ -34,13 +34,16 @@ class AuditoriasListAuditado(ListView):
         lista_auditorias = Ges_auditoria.objects.filter(jefatura_id_id=id_jefatura.id)
 
 
-        count_hallazgos = Ges_Hallazgo.objects.values('id_auditoria').filter(
-            id_auditoria=OuterRef('pk')).annotate(
+        count_hallazgos = Ges_Hallazgo.objects.values('id_auditoria').filter(Q(id_auditoria=OuterRef('pk')) &
+                                                                             Q(id_estadoshallazgo_id__in =[ 1,2,3,4,5])
+            ).annotate(
             count_id_auditoria=Count('id_auditoria'))
 
 
         lista_auditorias = Ges_auditoria.objects.filter(jefatura_id_id=id_jefatura.id).annotate(
         count_hallazgos=Subquery(count_hallazgos.values('count_id_auditoria')))
+
+
 
 
 
